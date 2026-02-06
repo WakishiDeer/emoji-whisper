@@ -114,12 +114,13 @@ export class PromptAPIAdapter implements AvailabilityChecker, SuggestionGenerato
       promptLength: prompt.length,
       maxTokens: config.maxTokens,
       temperature: config.temperature,
+      topK: config.topK,
       outputLanguage: config.outputLanguage ?? null,
     });
 
     // Chrome 138+: LanguageModel.create() is a static method
     const session = await detected.model.create({
-      topK: 3,
+      topK: config.topK,
       temperature: config.temperature,
       ...buildLanguageModelOptions(config),
       ...(signal ? { signal } : {}),

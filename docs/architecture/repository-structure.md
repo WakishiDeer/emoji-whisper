@@ -48,6 +48,14 @@ emoji-completion/
 │  └─ tasks.json
 ├─ docs/
 │  ├─ adr/
+│  │  ├─ 0001-use-wxt.md
+│  │  ├─ 0002-keybinding-tab-behavior.md
+│  │  ├─ 0003-ai-engine-ondevice-first.md
+│  │  ├─ 0004-testing-strategy.md
+│  │  ├─ 0005-context-extraction-settings.md
+│  │  ├─ 0006-domain-model-design.md
+│  │  ├─ 0007-bidirectional-sentence-context.md
+│  │  └─ 0008-prompt-and-sampling-tuning.md
 │  ├─ architecture/
 │  │  └─ repository-structure.md
 │  ├─ dev/

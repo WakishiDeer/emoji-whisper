@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
 ## [Unreleased]
+
+- Added `topK` field to `PromptConfig` (default: 8) to control token sampling diversity; previously hardcoded to 3 in the Prompt API adapter.
+- Expanded system prompt few-shot examples from 4 to 12 across 5 categories (single words, tech terms, abstract emotions, greetings/idioms, and no-direct-emoji concepts) with guidance for short-phrase inputs and metaphorical matching.
+- Updated user-facing prompt suffix to say "best represents the text" / "Prefer a specific emoji over a generic sentiment emoji" for both character and sentence modes.
+- Updated functional requirements to document `topK` and `temperature` as future user-configurable settings, and added AI model tuning section to the settings page specification.
+- Updated glossary with `topK` definition.
+- Added ADR 0008: Prompt and sampling tuning for emoji diversity.
 - Fixed ghost overlay positioning on scrolled pages by converting viewport-relative caret coordinates to page-absolute coordinates (`+ window.scrollX/Y`).
 - Pinned mirror div position in caret calculation to avoid layout-dependent measurement errors.
 - Improved overlay visibility: increased opacity from 0.55 to 0.80 and removed incorrect `font: inherit` (was inheriting from `<body>` instead of the target input).

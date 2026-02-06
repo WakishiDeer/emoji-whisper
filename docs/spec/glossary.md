@@ -28,7 +28,8 @@ This document defines the ubiquitous language used throughout the Emoji Suggesti
 | SkipConditions | A set of conditions that cause suggestion generation to be skipped: `skipIfEmpty` (trimmed input is empty), `skipIfEmojiOnly` (input contains only emoji/whitespace), `skipIfUrlOnly` (input matches `http://` or `https://` pattern). |
 | PromptConfig | A value object describing the prompt configuration used to call the AI (system prompt template, output constraint, model options). |
 | SystemPromptTemplate | The fixed system-level prompt used to constrain AI output in MVP. |
-| PromptOptions | Model options such as `maxTokens` and `temperature` used for the Prompt API call. |
+| PromptOptions | Model options such as `maxTokens`, `temperature`, and `topK` used for the Prompt API call. |
+| topK | A model sampling parameter that controls how many top-probability tokens are considered at each generation step. Lower values (e.g. 3) restrict output diversity; higher values (e.g. 8–40) allow the model to select from a wider pool of candidates. Default: 8. |
 | ContextMode | The extraction strategy: `'characters'` (legacy character-count based) or `'sentences'` (sentence-count based, see ADR 0007). |
 | beforeSentenceCount | Number of complete sentences to extract **before** the cursor when using sentence mode. Default: 2. |
 | afterSentenceCount | Number of complete sentences to extract **after** the cursor when using sentence mode. Default: 1. |

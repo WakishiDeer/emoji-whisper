@@ -50,6 +50,7 @@ export function createEmojiCompletionController(
   let pendingAbort: AbortController | null = null;
   let hasLoggedFirstActivation = false;
   let lastUnavailableToastAtMs: number | null = null;
+  let repositionRafId: number | null = null;
 
   function start() {
     log.info('controller.start');
@@ -75,6 +76,8 @@ export function createEmojiCompletionController(
     document.addEventListener('mousedown', onAnyInteraction, true);
     document.addEventListener('mouseup', onAnyInteraction, true);
     document.addEventListener('click', onAnyInteraction, true);
+    window.addEventListener('scroll', onScrollOrResize, true);
+    window.addEventListener('resize', onScrollOrResize);
   }
 
   function stop() {
@@ -88,6 +91,8 @@ export function createEmojiCompletionController(
     document.removeEventListener('mousedown', onAnyInteraction, true);
     document.removeEventListener('mouseup', onAnyInteraction, true);
     document.removeEventListener('click', onAnyInteraction, true);
+    window.removeEventListener('scroll', onScrollOrResize, true);
+    window.removeEventListener('resize', onScrollOrResize);
   }
 
   function onFocusIn(evt: FocusEvent) {
@@ -139,6 +144,17 @@ export function createEmojiCompletionController(
   function onAnyInteraction() {
     cancelAll();
     schedule();
+  }
+
+  function onScrollOrResize() {
+    if (!overlay.isVisible() || !activeEl) return;
+    if (repositionRafId != null) return;
+    repositionRafId = requestAnimationFrame(() => {
+      repositionRafId = null;
+      if (overlay.isVisible() && activeEl) {
+        overlay.reposition(activeEl);
+      }
+    });
   }
 
   function onKeyDown(evt: KeyboardEvent) {
@@ -267,6 +283,7 @@ export function createEmojiCompletionController(
         promptLength: begun.promptLength,
         maxTokens: DEFAULT_PROMPT_CONFIG.maxTokens,
         temperature: DEFAULT_PROMPT_CONFIG.temperature,
+        topK: DEFAULT_PROMPT_CONFIG.topK,
       });
       const suggestion = await ai.generateSuggestion(begun.prompt, DEFAULT_PROMPT_CONFIG, abort.signal);
 
@@ -320,6 +337,10 @@ export function createEmojiCompletionController(
     if (idleTimer != null) {
       window.clearTimeout(idleTimer);
       idleTimer = null;
+    }
+    if (repositionRafId != null) {
+      cancelAnimationFrame(repositionRafId);
+      repositionRafId = null;
     }
     cancelPendingOnly();
     cancelOverlayOnly();
