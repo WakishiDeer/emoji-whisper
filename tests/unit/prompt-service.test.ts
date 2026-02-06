@@ -16,7 +16,7 @@ describe('buildEmojiPrompt', () => {
 
     expect(prompt).toContain(config.systemPromptTemplate);
     expect(prompt).toContain(`Text:\n${context}`);
-    expect(prompt).toContain('Return exactly one emoji that best represents the text');
+    expect(prompt).toContain('best represent the text');
     expect(prompt).toContain('Prefer a specific emoji over a generic sentiment emoji');
   });
 
@@ -26,16 +26,24 @@ describe('buildEmojiPrompt', () => {
 
     expect(prompt).toContain(config.systemPromptTemplate);
     expect(prompt).toContain(`Text:\n${context}`);
-    expect(prompt).toContain('Return exactly one emoji that best fits the position marked by [CURSOR]');
+    expect(prompt).toContain('[CURSOR]');
     expect(prompt).toContain('Prefer a specific emoji over a generic sentiment emoji');
   });
 
-  it('DEFAULT_PROMPT_CONFIG includes topK and few-shot examples', () => {
+  it('DEFAULT_PROMPT_CONFIG includes topK and content quality instructions', () => {
     expect(DEFAULT_PROMPT_CONFIG.topK).toBe(8);
     expect(DEFAULT_PROMPT_CONFIG.temperature).toBe(0.7);
+    expect(DEFAULT_PROMPT_CONFIG.maxTokens).toBe(64);
+    // Format instructions removed — responseConstraint enforces JSON structure.
+    // Content quality guidance remains.
+    expect(DEFAULT_PROMPT_CONFIG.systemPromptTemplate).toContain('"emoji"');
+    expect(DEFAULT_PROMPT_CONFIG.systemPromptTemplate).toContain('"reason"');
     expect(DEFAULT_PROMPT_CONFIG.systemPromptTemplate).toContain('specific object');
     expect(DEFAULT_PROMPT_CONFIG.systemPromptTemplate).toContain('single word or short phrase');
     expect(DEFAULT_PROMPT_CONFIG.systemPromptTemplate).toContain('closest metaphorical match');
+    // Verify JSON format instruction is NOT present (enforced by responseConstraint instead).
+    expect(DEFAULT_PROMPT_CONFIG.systemPromptTemplate).not.toContain('Output MUST be valid JSON');
+    expect(DEFAULT_PROMPT_CONFIG.systemPromptTemplate).not.toContain('respond with valid JSON');
   });
 
   it('DEFAULT_PROMPT_CONFIG covers diverse few-shot categories', () => {

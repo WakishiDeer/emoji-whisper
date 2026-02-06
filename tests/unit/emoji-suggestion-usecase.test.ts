@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { SuggestionSession } from '../../src/core/domain/suggestion/suggestion-session';
-import { createSuggestion } from '../../src/core/domain/suggestion/suggestion';
+import { createSuggestionResult } from '../../src/core/domain/suggestion/suggestion';
 import { DEFAULT_PROMPT_CONFIG } from '../../src/core/services/prompt';
 import { applyEmojiSuggestionResult, beginEmojiSuggestionRequest } from '../../src/core/services/emoji-suggestion-usecase';
 import { DEFAULT_SENTENCE_CONTEXT_SETTINGS } from '../../src/core/services/context';
@@ -191,14 +191,14 @@ describe('emoji-suggestion-usecase', () => {
             session,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             requestId: 'wrong' as any,
-            suggestion: createSuggestion('😊'),
+            suggestionResult: createSuggestionResult('😊', 'Expresses joy'),
         });
         expect(wrong).toBe(false);
 
         const right = applyEmojiSuggestionResult({
             session,
             requestId: begun.requestId,
-            suggestion: createSuggestion('😊'),
+            suggestionResult: createSuggestionResult('😊', 'Expresses joy'),
         });
         expect(right).toBe(true);
         expect(session.isOverlayVisible()).toBe(true);

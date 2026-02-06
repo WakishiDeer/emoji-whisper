@@ -86,3 +86,12 @@ The following acceptance criteria translate the functional requirements into con
 *When* the user pauses typing (idle)
 *Then* the extension MUST not call the Prompt API
 *And* it MUST not display an overlay.
+
+## AC‑13: Reason tooltip on hover
+
+*Given* an emoji suggestion overlay is visible in a text field
+*When* the user hovers the mouse over the ghost emoji overlay
+*Then* a tooltip MUST appear displaying the model's reasoning in English (e.g. "Expresses joy and happiness")
+*And* hovering MUST not dismiss the suggestion overlay
+*And* hovering MUST not steal focus from the input field
+*And* moving the mouse away from the overlay MUST hide the tooltip.

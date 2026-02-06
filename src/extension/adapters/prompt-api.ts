@@ -1,5 +1,5 @@
-import { parseSuggestionFromModelOutput } from '../../core/domain/suggestion/suggestion-parser';
-import type { Suggestion } from '../../core/domain/suggestion/suggestion';
+import { parseSuggestionResultFromModelOutput } from '../../core/domain/suggestion/suggestion-parser';
+import type { SuggestionResult } from '../../core/domain/suggestion/suggestion';
 import type { AvailabilityChecker, AvailabilityState } from '../../core/ports/availability-checker';
 import type { SuggestionGenerator } from '../../core/ports/suggestion-generator';
 import type { PromptConfig } from '../../core/services/prompt';
@@ -13,9 +13,28 @@ type LanguageModelStatic = {
   create: (options?: Record<string, unknown>) => Promise<LanguageModelSession>;
 };
 
+type LanguageModelPromptOptions = {
+  responseConstraint?: Record<string, unknown>;
+  signal?: AbortSignal;
+};
+
 type LanguageModelSession = {
-  prompt: (input: string) => Promise<string>;
+  prompt: (input: string, options?: LanguageModelPromptOptions) => Promise<string>;
   destroy?: () => void;
+};
+
+/**
+ * JSON Schema passed to `session.prompt()` via `responseConstraint`.
+ * Chrome 137+ structurally enforces model output to match this schema.
+ */
+const SUGGESTION_RESULT_SCHEMA: Record<string, unknown> = {
+  type: 'object',
+  required: ['reason', 'emoji'],
+  additionalProperties: false,
+  properties: {
+    reason: { type: 'string' },
+    emoji: { type: 'string' },
+  },
 };
 
 function isLanguageModelStatic(value: unknown): value is LanguageModelStatic {
@@ -103,7 +122,7 @@ export class PromptAPIAdapter implements AvailabilityChecker, SuggestionGenerato
     }
   }
 
-  async generateSuggestion(prompt: string, config: PromptConfig, signal?: AbortSignal): Promise<Suggestion> {
+  async generateSuggestion(prompt: string, config: PromptConfig, signal?: AbortSignal): Promise<SuggestionResult> {
     const detected = detectLanguageModelBinding();
     if (!detected.model) throw new Error('Prompt API unavailable');
 
@@ -129,19 +148,21 @@ export class PromptAPIAdapter implements AvailabilityChecker, SuggestionGenerato
     try {
       if (signal?.aborted) throw new Error('Aborted');
 
-      const output = await session.prompt(prompt);
+      const output = await session.prompt(prompt, {
+        responseConstraint: SUGGESTION_RESULT_SCHEMA,
+      });
       if (signal?.aborted) throw new Error('Aborted');
 
       this.log.debug('generate.output', { rawOutput: output, rawOutputLength: output.length });
 
-      const suggestion = parseSuggestionFromModelOutput(output);
-      if (!suggestion) {
+      const result = parseSuggestionResultFromModelOutput(output);
+      if (!result) {
         this.log.warn('generate.parse-failed', { rawOutput: output });
         throw new Error('Invalid suggestion output');
       }
 
-      this.log.debug('generate.success', { suggestionLength: suggestion.length });
-      return suggestion;
+      this.log.debug('generate.success', { emoji: result.emoji, reason: result.reason });
+      return result;
     } finally {
       // Release resources; creating a session can be expensive, but this avoids
       // leaks in long-lived pages. We can cache/reuse later if needed.

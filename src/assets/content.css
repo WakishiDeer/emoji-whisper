@@ -1,9 +1,33 @@
 .ec-ghost {
   position: absolute;
   z-index: 2147483647;
-  pointer-events: none;
+  pointer-events: auto;
   opacity: 0.80;
   white-space: pre;
+  cursor: default;
+}
+
+.ec-ghost-tooltip {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  margin-bottom: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.82);
+  color: #fff;
+  font: 11px/1.3 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  white-space: nowrap;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+.ec-ghost:hover .ec-ghost-tooltip {
+  display: block;
 }
 
 .ec-toast {

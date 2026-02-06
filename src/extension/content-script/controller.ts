@@ -1,6 +1,5 @@
-import type { ContextExtractionSettings, SkipConditions } from '../../core/services/context';
-import { DEFAULT_SENTENCE_CONTEXT_SETTINGS } from '../../core/services/context';
 import { DEFAULT_PROMPT_CONFIG } from '../../core/services/prompt';
+import { DEFAULT_USER_PREFERENCES } from '../../core/domain/preferences/user-preferences';
 import type { SuggestionInputSnapshot } from '../../core/services/emoji-suggestion-orchestrator';
 import { SuggestionSession } from '../../core/domain/suggestion/suggestion-session';
 import { isEnterKey, isEscapeKey, isPlainTabKey, isTabKey } from '../../core/domain/keyboard/key-utils';
@@ -8,6 +7,7 @@ import { shouldAllowThrottledAction } from '../../core/services/throttle';
 import { applyEmojiSuggestionResult, beginEmojiSuggestionRequest } from '../../core/services/emoji-suggestion-usecase';
 import type { AvailabilityChecker } from '../../core/ports/availability-checker';
 import type { Clock } from '../../core/ports/clock';
+import { CSS } from './overlay';
 import type { SuggestionGenerator } from '../../core/ports/suggestion-generator';
 import { PromptAPIAdapter } from '../adapters/prompt-api';
 import { createExtensionLogger } from '../diagnostics/logger';
@@ -15,19 +15,8 @@ import { findSupportedInputFromEvent, insertAtCaret, type SupportedEl } from './
 import { readSuggestionSnapshotFromActiveEl } from './input-snapshot';
 import { GhostOverlay, ToastMessage } from './overlay';
 
-const DEFAULT_SETTINGS: ContextExtractionSettings = {
-  contextMode: 'sentences',
-  minContextLength: 5,
-  maxContextLength: 200,
-  adjustToBoundary: true,
-  sentenceContext: DEFAULT_SENTENCE_CONTEXT_SETTINGS,
-};
-
-const DEFAULT_SKIP: SkipConditions = {
-  skipIfEmpty: true,
-  skipIfEmojiOnly: true,
-  skipIfUrlOnly: false,
-};
+const DEFAULT_SETTINGS = DEFAULT_USER_PREFERENCES.context;
+const DEFAULT_SKIP = DEFAULT_USER_PREFERENCES.skip;
 
 const IDLE_DELAY_MS = 700;
 const COOLDOWN_MS = 2000;
@@ -141,7 +130,15 @@ export function createEmojiCompletionController(
     schedule();
   }
 
-  function onAnyInteraction() {
+  function onAnyInteraction(evt: MouseEvent) {
+    // Prevent focus steal: clicks on the ghost overlay should not blur the input.
+    if (evt.type === 'mousedown' && overlay.isVisible()) {
+      const target = evt.target as Element | null;
+      if (target?.closest(`.${CSS.ghost}`)) {
+        evt.preventDefault();
+        return;
+      }
+    }
     cancelAll();
     schedule();
   }
@@ -197,11 +194,11 @@ export function createEmojiCompletionController(
 
   function acceptOverlay() {
     if (!activeEl) return;
-    const suggestion = session.accept();
-    if (!suggestion) return;
+    const result = session.accept();
+    if (!result) return;
 
-    log.info('controller.accept', { suggestionLength: suggestion.length });
-    insertAtCaret(activeEl, suggestion);
+    log.info('controller.accept', { emoji: result.emoji, reason: result.reason });
+    insertAtCaret(activeEl, result.emoji);
     overlay.hide();
     session.resetIfCompleted();
   }
@@ -287,14 +284,14 @@ export function createEmojiCompletionController(
       });
       const suggestion = await ai.generateSuggestion(begun.prompt, DEFAULT_PROMPT_CONFIG, abort.signal);
 
-      log.debug('ai.generate.returned', { suggestionLength: suggestion.length, aborted: abort.signal.aborted });
+      log.debug('ai.generate.returned', { emoji: suggestion.emoji, reason: suggestion.reason, aborted: abort.signal.aborted });
 
       if (abort.signal.aborted) {
         log.debug('ai.generate.aborted-after-return');
         return;
       }
 
-      const applied = applyEmojiSuggestionResult({ session, requestId: begun.requestId, suggestion });
+      const applied = applyEmojiSuggestionResult({ session, requestId: begun.requestId, suggestionResult: suggestion });
       log.debug('session.receiveSuggestion.result', { applied });
 
       if (!applied) {
@@ -302,11 +299,12 @@ export function createEmojiCompletionController(
         return;
       }
 
-      log.debug('overlay.show.before', { activeElTag: activeEl?.tagName, suggestionLength: suggestion.length });
-      overlay.show(activeEl, suggestion);
+      log.debug('overlay.show.before', { activeElTag: activeEl?.tagName, emoji: suggestion.emoji });
+      overlay.show(activeEl, suggestion.emoji, suggestion.reason);
       log.info('ai.generate.success', {
         contextLength: begun.contextLength,
-        suggestionLength: suggestion.length,
+        emoji: suggestion.emoji,
+        reason: suggestion.reason,
         contextHash: begun.contextHash,
       });
     } catch {

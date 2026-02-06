@@ -1,6 +1,6 @@
 import type { Context } from '../context/context';
 import { type ContextHash, hashEquals } from '../context/context-hash';
-import type { Suggestion } from './suggestion';
+import type { SuggestionResult } from './suggestion';
 
 export type SessionState = 'Idle' | 'Pending' | 'Shown' | 'Completed';
 export type CompletedReason = 'accepted' | 'dismissed' | null;
@@ -26,7 +26,7 @@ export type SkipReason =
 export type SuggestionSessionSnapshot = Readonly<{
   state: SessionState;
   context: Context | null;
-  suggestion: Suggestion | null;
+  suggestionResult: SuggestionResult | null;
   completedReason: CompletedReason;
   lastAttemptAtMs: number;
   lastContextHash: ContextHash | null;
@@ -36,7 +36,7 @@ export type SuggestionSessionSnapshot = Readonly<{
 export class SuggestionSession {
   private state: SessionState = 'Idle';
   private context: Context | null = null;
-  private suggestion: Suggestion | null = null;
+  private suggestionResult: SuggestionResult | null = null;
   private completedReason: CompletedReason = null;
 
   private lastAttemptAtMs = Number.NEGATIVE_INFINITY;
@@ -47,7 +47,7 @@ export class SuggestionSession {
     return {
       state: this.state,
       context: this.context,
-      suggestion: this.suggestion,
+      suggestionResult: this.suggestionResult,
       completedReason: this.completedReason,
       lastAttemptAtMs: this.lastAttemptAtMs,
       lastContextHash: this.lastContextHash,
@@ -56,7 +56,7 @@ export class SuggestionSession {
   }
 
   isOverlayVisible(): boolean {
-    return this.state === 'Shown' && this.suggestion != null;
+    return this.state === 'Shown' && this.suggestionResult != null;
   }
 
   beginRequest(params: {
@@ -80,7 +80,7 @@ export class SuggestionSession {
 
     this.state = 'Pending';
     this.context = context;
-    this.suggestion = null;
+    this.suggestionResult = null;
     this.completedReason = null;
 
     const requestId = createRequestId(nowMs);
@@ -94,7 +94,7 @@ export class SuggestionSession {
 
     this.state = 'Idle';
     this.context = null;
-    this.suggestion = null;
+    this.suggestionResult = null;
     this.pendingRequestId = null;
     this.completedReason = null;
   }
@@ -103,22 +103,22 @@ export class SuggestionSession {
     if (this.state === 'Pending' || this.state === 'Shown') {
       this.state = 'Idle';
       this.context = null;
-      this.suggestion = null;
+      this.suggestionResult = null;
       this.pendingRequestId = null;
       this.completedReason = null;
     }
   }
 
-  receiveSuggestion(params: { requestId: SuggestionRequestId; suggestion: Suggestion }): boolean {
+  receiveSuggestion(params: { requestId: SuggestionRequestId; suggestionResult: SuggestionResult }): boolean {
     if (this.state !== 'Pending') return false;
     if (this.pendingRequestId == null) return false;
     if (params.requestId !== this.pendingRequestId) return false;
 
     this.state = 'Shown';
-    this.suggestion = params.suggestion;
+    this.suggestionResult = params.suggestionResult;
     this.pendingRequestId = null;
 
-    if (this.suggestion == null) {
+    if (this.suggestionResult == null) {
       // Invariant safety.
       this.cancelPendingOrOverlay();
       return false;
@@ -133,20 +133,20 @@ export class SuggestionSession {
     this.completedReason = 'dismissed';
   }
 
-  accept(): Suggestion | null {
+  accept(): SuggestionResult | null {
     if (this.state !== 'Shown') return null;
-    if (!this.suggestion) return null;
+    if (!this.suggestionResult) return null;
 
     this.state = 'Completed';
     this.completedReason = 'accepted';
-    return this.suggestion;
+    return this.suggestionResult;
   }
 
   resetIfCompleted(): void {
     if (this.state !== 'Completed') return;
     this.state = 'Idle';
     this.context = null;
-    this.suggestion = null;
+    this.suggestionResult = null;
     this.pendingRequestId = null;
     this.completedReason = null;
   }

@@ -4,7 +4,7 @@ import type { PromptConfig } from './prompt';
 import type { Context } from '../domain/context/context';
 import type { ContextHash } from '../domain/context/context-hash';
 import { SuggestionSession, type SkipReason, type SuggestionRequestId } from '../domain/suggestion/suggestion-session';
-import type { Suggestion } from '../domain/suggestion/suggestion';
+import type { SuggestionResult } from '../domain/suggestion/suggestion';
 
 export type BeginEmojiSuggestionRequestResult =
     | { kind: 'skipped'; reason: SkipReason }
@@ -65,7 +65,7 @@ export function beginEmojiSuggestionRequest(params: {
 export function applyEmojiSuggestionResult(params: {
     session: SuggestionSession;
     requestId: SuggestionRequestId;
-    suggestion: Suggestion;
+    suggestionResult: SuggestionResult;
 }): boolean {
-    return params.session.receiveSuggestion({ requestId: params.requestId, suggestion: params.suggestion });
+    return params.session.receiveSuggestion({ requestId: params.requestId, suggestionResult: params.suggestionResult });
 }

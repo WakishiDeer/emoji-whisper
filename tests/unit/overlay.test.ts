@@ -47,6 +47,34 @@ describe('GhostOverlay', () => {
         expect(overlay.getEmoji()).toBe('😊');
     });
 
+    it('shows the overlay with emoji and reason tooltip', () => {
+        const target = createTextarea();
+        mockedGetCaretPosition.mockReturnValue({ left: 100, top: 200, height: 16 });
+
+        overlay.show(target, '🎸', 'Mentions playing guitar');
+
+        expect(overlay.isVisible()).toBe(true);
+        expect(overlay.getEmoji()).toBe('🎸');
+        expect(overlay.getReason()).toBe('Mentions playing guitar');
+
+        const tooltip = document.querySelector('.ec-ghost-tooltip') as HTMLDivElement;
+        expect(tooltip).not.toBeNull();
+        expect(tooltip.textContent).toBe('Mentions playing guitar');
+        expect(tooltip.style.display).not.toBe('none');
+    });
+
+    it('hides tooltip when no reason is provided', () => {
+        const target = createTextarea();
+        mockedGetCaretPosition.mockReturnValue({ left: 100, top: 200, height: 16 });
+
+        overlay.show(target, '😊');
+
+        const tooltip = document.querySelector('.ec-ghost-tooltip') as HTMLDivElement;
+        expect(tooltip).not.toBeNull();
+        expect(tooltip.style.display).toBe('none');
+        expect(overlay.getReason()).toBeNull();
+    });
+
     it('copies font metrics from target to the overlay element', () => {
         const target = createTextarea();
         // Stub getComputedStyle to return known values

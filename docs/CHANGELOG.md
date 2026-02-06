@@ -6,6 +6,25 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [Unreleased]
 
+- Eliminated duplicated `DEFAULT_SETTINGS` / `DEFAULT_SKIP` in controller.ts by importing from `DEFAULT_USER_PREFERENCES` in core domain.
+- Extracted presentation-layer constants in overlay.ts: CSS class names (`CSS`), ARIA attributes (`ARIA`), layout tuning knobs (`LAYOUT`), and `DEFAULT_TOAST_DURATION_MS`. Exported `CSS` for use by controller.ts.
+- Adopted `responseConstraint` (Chrome 137+ structured output) on `session.prompt()` to enforce JSON output via JSON Schema instead of prompt-level instructions.
+- Simplified system prompt: removed JSON format instructions ("Output MUST be valid JSON", "respond with valid JSON") since `responseConstraint` handles format enforcement. Content quality guidance (emoji selection rules, reason constraints, few-shot examples) retained.
+- Removed "Return valid JSON" trailing instruction from `buildEmojiPrompt()`.
+- Updated ADR 0009 with `responseConstraint` adoption update.
+- Updated functional requirements (FR-4) with structured output specification.
+
+- Added Chain-of-Thought (CoT) prompting: model now returns JSON `{ "reason": "...", "emoji": "..." }` instead of a bare emoji, enabling reasoning before selection.
+- Added reason tooltip: hovering over the ghost emoji overlay shows the model's reasoning in a tooltip (AC-13).
+- Added `SuggestionResult` value object holding both `emoji` and `reason` fields.
+- Updated prompt template to JSON output format with explicit rules and 12 JSON few-shot examples.
+- Updated `maxTokens` from 10 to 64 to accommodate JSON output with reason.
+- Updated parser with JSON-first strategy and bare-emoji fallback for backward compatibility.
+- Updated `SuggestionGenerator` port, `PromptAPIAdapter`, `SuggestionSession`, usecase, and controller to propagate `SuggestionResult` through all layers.
+- Changed ghost overlay `pointer-events` from `none` to `auto` (with `mousedown` focus-steal prevention) to enable hover tooltip.
+- Added ADR 0009: Chain-of-Thought prompting with reason output.
+- Updated functional requirements (FR-4, FR-5), glossary, and acceptance criteria (AC-13).
+
 - Added `topK` field to `PromptConfig` (default: 8) to control token sampling diversity; previously hardcoded to 3 in the Prompt API adapter.
 - Expanded system prompt few-shot examples from 4 to 12 across 5 categories (single words, tech terms, abstract emotions, greetings/idioms, and no-direct-emoji concepts) with guidance for short-phrase inputs and metaphorical matching.
 - Updated user-facing prompt suffix to say "best represents the text" / "Prefer a specific emoji over a generic sentiment emoji" for both character and sentence modes.
