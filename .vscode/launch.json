@@ -1,0 +1,77 @@
+{
+  "version": "0.2.0",
+  "compounds": [
+    {
+      "name": "Launch + Attach Chrome 9222 (content scripts)",
+      "configurations": [
+        "Launch Chrome (remote 9222)",
+        "Attach to Chrome (content scripts)"
+      ]
+    }
+  ],
+  "configurations": [
+    {
+      "name": "Launch Chrome (remote 9222)",
+      "type": "chrome",
+      "request": "launch",
+      "runtimeExecutable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+      "runtimeArgs": [
+        "--remote-debugging-port=9222",
+        "--user-data-dir=${env:TEMP}\\emoji-completion-debug-profile",
+      ],
+      "url": "https://example.com",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Attach to Chrome (content scripts)",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "url": "https://example.com/*",
+      "webRoot": "${workspaceFolder}/.output/chrome-mv3-dev/content-scripts",
+      "sourceMaps": true,
+      "trace": true,
+      "sourceMapPathOverrides": {
+        "../../../src/*": "${workspaceFolder}/src/*",
+        "../../../node_modules/*": "${workspaceFolder}/node_modules/*"
+      },
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"]
+    },
+    {
+      "name": "Debug Vitest Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["test:run", "--", "--inspect-brk", "--no-file-parallelism"],
+      "preLaunchTask": "TYPECHECK typecheck",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"]
+    },
+    {
+      "name": "Debug Current Vitest File",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["test:run", "--", "--inspect-brk", "--no-file-parallelism", "${relativeFile}"],
+      "preLaunchTask": "TYPECHECK typecheck",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"]
+    },
+    {
+      "name": "Run WXT Dev Server",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm build:dev",
+      "preLaunchTask": "TYPECHECK typecheck"
+    },
+    {
+      "name": "Run WXT Build",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm build",
+      "preLaunchTask": "TYPECHECK typecheck"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
+
+## [Unreleased]
+
+- Refactor: Moved skip rules (`SkipConditions`, `shouldSkipByLength`, `shouldSkipByConditions`) into `src/core/domain/suggestion/suggestion-skip-policy.ts` and re-exported them via `src/core/services/context.ts`.
+- Fixed unit test import ordering in `context-service.test.ts` to avoid mid-file imports.
+- Added ADR 0007: Bidirectional sentence-based context extraction, superseding ADR 0005. Introduces `contextMode`, `beforeSentenceCount`, `afterSentenceCount`, and `cursorMarker` settings for extracting context on both sides of the cursor.
+- Updated glossary with new context extraction terms (ContextMode, beforeSentenceCount, afterSentenceCount, cursorMarker).
+- Updated functional requirements to document sentence-mode context extraction settings.
+- Implemented bidirectional sentence-based context extraction:
+  - Added `ContextMode`, `SentenceContextSettings`, and unified `extractContext` function in `context.ts`.
+  - Added `extractContextAroundCursor` for sentence-mode extraction with cursor marker.
+  - Updated `buildEmojiPrompt` to support sentence-mode prompts with cursor marker instructions.
+  - Updated orchestrator to use unified extraction and pass `isSentenceMode` to prompt builder.
+  - Extended `UserPreferences` with `contextMode` and `sentenceContext` settings.
+  - Added validation for sentence context settings (beforeSentenceCount, afterSentenceCount, cursorMarker).
+  - Changed default `contextMode` to `'sentences'` for improved mid-text suggestions.
+- Added comprehensive unit tests for sentence-based context extraction and validation.
+- Refactor: Moved context extraction rules to `src/core/domain/context/context-extraction.ts` and extracted djb2 hashing into `src/core/shared/hash/djb2.ts`; kept `src/core/services/context.ts` as a backward-compatible facade.
+- Moved core log primitives to `src/core/shared/log/` and updated all imports; kept `src/core/domain/log/*` as temporary compatibility re-exports during migration.
+- Expanded keyboard domain (`src/core/domain/keyboard/key-utils.ts`) with `hasModifiers`, `isTabKey`, `isEscapeKey`, `isEnterKey` for consistent key event handling across the codebase.
+- Split controller-helpers into responsibility-focused modules following DDD:
+  - Moved `isPlainTabKey` to `src/core/domain/keyboard/key-utils.ts` (pure keyboard logic).
+  - Moved throttle logic to `src/core/services/throttle.ts` (pure time-based logic).
+  - Created `src/extension/content-script/dom-utils.ts` for DOM element utilities.
+  - Created `src/extension/content-script/input-snapshot.ts` for DOM→snapshot conversion.
+  - Split unit tests accordingly (`key-utils.test.ts`, `throttle.test.ts`).
+- Refactored suggestion flow logic into a core application service (`beginEmojiSuggestionRequest` / `applyEmojiSuggestionResult`) to keep the content controller thinner and more changeable.
+- Fixed keyboard interception rules: accept only plain `Tab` (never `Shift+Tab` or modified Tab), and never intercept keys during IME composition.
+- Improved cancellation correctness: selection/caret movement now aborts pending Prompt API requests (not just hides the overlay).
+- Throttled AI-unavailable toast messages to avoid repeated notifications while the user keeps typing.
+- Added unit tests for controller helper logic (Tab interception + toast throttling).
+- **Fixed Prompt API access**: Changed content script to run in main world (`world: 'MAIN'`) so `globalThis.LanguageModel` is accessible.
+- **Fixed session state bug**: Moved `cancelPendingOnly()` before `beginRequest()` to prevent immediately cancelling the newly started request.
+- **Updated Prompt API bindings**: Standardized on the Chrome 138+ `globalThis.LanguageModel` global (static methods) and removed legacy `ai.languageModel` fallbacks.
+- Passed `outputLanguage` into LanguageModel API calls to avoid browser warnings and improve output quality/safety attestation.
+- Improved content-script diagnostics by logging the specific guard/skip reason when a suggestion attempt doesn't trigger.
+- Added comprehensive debug logging for overlay show/hide/reposition and toast messages.
+- Added log level prefix (`[DEBUG]`, `[INFO ]`, etc.) to console output for easier filtering.
+- Added `contextLength` to AI generation logs for input/output visibility.
+- Expanded context extraction tests to document the specification (cursor position, maxContextLength, boundary adjustment, skip conditions).
+- Updated glossary with detailed definitions for Context, Sentence Boundary, and Settings terms.
+- Removed unused Prompt API adapter exports and refreshed docs/glossary to match the official `globalThis.LanguageModel` entrypoint.
+- Added `'downloadable'` to `AvailabilityState` type to match Chrome's actual API return values.
+- Changed `pnpm dev` to run a dev-mode build without launching the browser runner; kept runner behavior under `pnpm dev:runner`.
+- Added a VS Code Chrome attach debug configuration and documented content-script debugging with WXT inline sourcemaps.
+- Fixed VS Code TS breakpoint binding for content scripts by adjusting Chrome attach sourcemap resolution/path overrides.
+- Enabled inline sourcemaps for dev builds in WXT config and updated VS Code launch to auto-load the unpacked dev build.
+- Improved Prompt API reliability by passing matching `expectedInputs`/`expectedOutputs` options into both `LanguageModel.availability()` and `LanguageModel.create()`.
+- Added a VS Code task for `pnpm lint` for consistent local verification.
+- Improved diagnostics: logger defaults to debug in dev builds even when `import.meta.env` is missing; added info-level first-activation log and differentiated AI unavailability messages.
+- Enforced the logging boundary by disallowing `console.*` usage outside the console log sink via ESLint.
+- Documented that [web-ext.config.ts](../web-ext.config.ts) is developer-local runner configuration and must not be modified/committed as part of feature work.
+- Added a unified logging system (core Log domain objects + extension console sink) and instrumented content script runtime for easier debugging.
+- Fixed content script startup crash by removing an unsupported `browser.runtime.getPlatformInfo()` call.
+- Added unit tests for context extraction, prompt building, orchestrator preparation, and user preferences validation.
+- Added Clock injection in the content-script controller for time-based testability.
+- Improved ghost overlay accessibility with polite ARIA announcements for suggestions.
+- Added initial WXT implementation scaffolding (content script entrypoint, caret overlay UI, and Prompt API adapter).
+- Added WXT/TypeScript project wiring (`wxt.config.ts`, `tsconfig.json`, and package scripts).
+- Added Web Standards compliance guidance to non-functional requirements.
+- Added WXT development guidelines under docs/dev for WXT-specific structure and constraints.
+- Added glossary and DDD-based domain model ADR for consistent terminology and design.
+- Added authoritative repository structure ASCII tree and required using it for future file operations.
+- Updated the repository structure to align with WXT project conventions when `srcDir: 'src'` is enabled.
+- Expanded functional requirements with prompt specification, context extraction rules, skip rules, lifecycle cancellation, and message UX details.
+- Cleaned up duplicated content in functional requirements.
+- Updated suggestion triggering to Copilot-style idle/Enter ghost suggestions (Tab accepts; Esc dismisses) with cooldown, selection/IME suppression, and immediate cancellation on interaction.
+- Updated defaults and terminology: `minContextLength` default to 5, and renamed “trigger key” to “accept key” in docs/ADRs.
+- Added prompt configuration domain object and fixed system prompt guidance for MVP.
+- Updated specs to include Microsoft Edge (Chromium) support alongside Chrome.
+- Updated overview to reflect Chrome/Edge support and Prompt API wording.
+- Expanded acceptance criteria to cover skip conditions, settings persistence, accessibility announcements, and cancellation on input change.
+- Added overlay positioning and accessibility announcements to non-functional requirements.
+- Added English-only and changelog maintenance rules to AI coding guidelines.
+- Added a repository-level Copilot instructions file to enforce spec/ADR/dev doc usage.
+- Added project changelog under docs.
+- Added core domain objects (Context, Suggestion, SuggestionSession) and core ports (AvailabilityChecker, SuggestionGenerator) aligned with ADR 0006.
+- Added emoji suggestion preparation service in core and refactored content-script controller to use domain session/state instead of ad-hoc local state.
+- Added Vitest unit tests for suggestion parsing and session invariants, plus `test` scripts.
+- Updated dev docs to document `pnpm test:run`/`pnpm typecheck` and added commenting guidelines for domain and ports.
+- Added VS Code launch.json and tasks.json for Vitest debugging and WXT dev/build tasks.
+- Fixed `pnpm dev`/VS Code DEV task to run `wxt` correctly (WXT treats the first positional argument as the project root).
+- Added ESLint TypeScript linter setup (flat config) and a dedicated `tsconfig.eslint.json` (for optional typed linting later).
+- Updated AI/dev workflow docs to require `pnpm lint` + `pnpm typecheck` after agent-driven code changes.

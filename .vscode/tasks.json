@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "DEV build:dev (no runner)",
+      "type": "shell",
+      "command": "pnpm build:dev",
+      "isBackground": false,
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "DEV dev:runner (launches browser)",
+      "type": "shell",
+      "command": "pnpm dev:runner",
+      "isBackground": true,
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "PROD wxt build",
+      "type": "shell",
+      "command": "pnpm wxt build",
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "TYPECHECK typecheck",
+      "type": "shell",
+      "command": "pnpm typecheck",
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "TEST test:run",
+      "type": "shell",
+      "command": "pnpm test:run",
+      "problemMatcher": []
+    },
+    {
+      "label": "LINT lint",
+      "type": "shell",
+      "command": "pnpm lint",
+      "problemMatcher": []
+    }
+  ]
+}

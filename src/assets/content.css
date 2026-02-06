@@ -1,0 +1,21 @@
+.ec-ghost {
+  position: absolute;
+  z-index: 2147483647;
+  pointer-events: none;
+  opacity: 0.55;
+  font: inherit;
+  white-space: pre;
+  line-height: 1;
+}
+
+.ec-toast {
+  position: absolute;
+  z-index: 2147483647;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.78);
+  color: white;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font: 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  max-width: 280px;
+}
