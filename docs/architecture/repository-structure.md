@@ -26,11 +26,13 @@ emoji-completion/
 ├─ wxt.config.ts
 ├─ tests/
 │  └─ unit/
+│     ├─ caret.test.ts
 │     ├─ context-service.test.ts
 │     ├─ emoji-suggestion-usecase.test.ts
 │     ├─ key-utils.test.ts
 │     ├─ logger.test.ts
 │     ├─ orchestrator.test.ts
+│     ├─ overlay.test.ts
 │     ├─ prompt-api-detection.test.ts
 │     ├─ prompt-service.test.ts
 │     ├─ suggestion-parser.test.ts

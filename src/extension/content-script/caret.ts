@@ -12,6 +12,8 @@ export function getCaretPosition(el: HTMLTextAreaElement | HTMLInputElement): Ca
 
   const mirror = document.createElement('div');
   mirror.style.position = 'absolute';
+  mirror.style.top = '0px';
+  mirror.style.left = '0px';
   mirror.style.visibility = 'hidden';
   mirror.style.whiteSpace = 'pre-wrap';
   mirror.style.wordWrap = 'break-word';
@@ -44,8 +46,8 @@ export function getCaretPosition(el: HTMLTextAreaElement | HTMLInputElement): Ca
 
   const elRect = el.getBoundingClientRect();
 
-  const left = elRect.left + (markerRect.left - mirrorRect.left) - el.scrollLeft;
-  const top = elRect.top + (markerRect.top - mirrorRect.top) - el.scrollTop;
+  const left = elRect.left + (markerRect.left - mirrorRect.left) - el.scrollLeft + window.scrollX;
+  const top = elRect.top + (markerRect.top - mirrorRect.top) - el.scrollTop + window.scrollY;
 
   const height = markerRect.height || parseFloat(computed.lineHeight) || 16;
 

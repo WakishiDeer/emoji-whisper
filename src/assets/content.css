@@ -2,10 +2,8 @@
   position: absolute;
   z-index: 2147483647;
   pointer-events: none;
-  opacity: 0.55;
-  font: inherit;
+  opacity: 0.80;
   white-space: pre;
-  line-height: 1;
 }
 
 .ec-toast {

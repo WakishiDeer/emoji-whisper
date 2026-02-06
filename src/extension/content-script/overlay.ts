@@ -19,6 +19,12 @@ export class GhostOverlay {
     const wasConnected = this.el.isConnected;
     this.el.textContent = emoji;
     this.el.setAttribute('aria-label', `Suggested emoji: ${emoji}`);
+
+    // Copy font metrics from target so the emoji renders at the correct scale.
+    const computed = getComputedStyle(target);
+    this.el.style.fontSize = computed.fontSize;
+    this.el.style.lineHeight = computed.lineHeight;
+
     if (!this.el.isConnected) document.body.appendChild(this.el);
     this.reposition(target);
     log.debug('ghost.show', { emoji, wasConnected, targetTag: target.tagName });
@@ -31,7 +37,14 @@ export class GhostOverlay {
   reposition(target: HTMLTextAreaElement | HTMLInputElement): void {
     const pos = getCaretPosition(target);
     if (!pos) {
-      log.debug('ghost.reposition.no-pos', { targetTag: target.tagName });
+      // Fallback: position near the bottom-right of the input element.
+      const rect = target.getBoundingClientRect();
+      const fallbackLeft = rect.right + window.scrollX;
+      const fallbackTop = rect.bottom + window.scrollY;
+      this.el.style.left = `${Math.round(fallbackLeft)}px`;
+      this.el.style.top = `${Math.round(fallbackTop)}px`;
+      this.el.style.transform = '';
+      log.debug('ghost.reposition.fallback', { left: fallbackLeft, top: fallbackTop, targetTag: target.tagName });
       return;
     }
 
@@ -70,8 +83,8 @@ export class ToastMessage {
     document.body.appendChild(el);
 
     const rect = target.getBoundingClientRect();
-    el.style.left = `${Math.round(rect.left)}px`;
-    el.style.top = `${Math.round(rect.bottom + 6)}px`;
+    el.style.left = `${Math.round(rect.left + window.scrollX)}px`;
+    el.style.top = `${Math.round(rect.bottom + 6 + window.scrollY)}px`;
 
     this.el = el;
     this.hideTimer = window.setTimeout(() => this.hide(), durationMs);

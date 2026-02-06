@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
 ## [Unreleased]
+- Fixed ghost overlay positioning on scrolled pages by converting viewport-relative caret coordinates to page-absolute coordinates (`+ window.scrollX/Y`).
+- Pinned mirror div position in caret calculation to avoid layout-dependent measurement errors.
+- Improved overlay visibility: increased opacity from 0.55 to 0.80 and removed incorrect `font: inherit` (was inheriting from `<body>` instead of the target input).
+- Overlay now dynamically copies `fontSize` and `lineHeight` from the target input element for correct emoji scale.
+- Added scroll and resize event listeners to reposition the overlay when the viewport changes (rAF-throttled).
+- Added fallback positioning (bottom-right of input) when caret coordinates cannot be computed.
+- Fixed ToastMessage positioning to account for page scroll offset.
+- Added unit tests for caret positioning (`caret.test.ts`) and overlay behaviour (`overlay.test.ts`).
 
 - Refactor: Moved skip rules (`SkipConditions`, `shouldSkipByLength`, `shouldSkipByConditions`) into `src/core/domain/suggestion/suggestion-skip-policy.ts` and re-exported them via `src/core/services/context.ts`.
 - Fixed unit test import ordering in `context-service.test.ts` to avoid mid-file imports.
