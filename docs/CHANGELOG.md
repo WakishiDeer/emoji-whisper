@@ -6,6 +6,22 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [Unreleased]
 
+- Added ADR 0010: Inline Mirror Overlay — replace absolute-positioned ghost div with a mirror overlay that renders the emoji inline with text flow, preventing overlay from covering existing text.
+- Added domain value objects `MirrorContent` and `MirrorLayout` in `src/core/domain/overlay/` for pure, testable overlay geometry and text decomposition.
+- Refactored `GhostOverlay` to use inline mirror overlay: creates a transparent mirror div over the target, renders text with ghost emoji inline at the caret, hides native text via `color: transparent` + `caretColor` preservation.
+- Removed `getCaretPosition` dependency from overlay (retained in codebase for `ToastMessage`).
+- Replaced CSS classes `.ec-ghost` → `.ec-mirror` + `.ec-mirror-ghost`; reduced ghost opacity from 0.80 to 0.50.
+- Added scroll sync (target scroll listener) and `ResizeObserver` for textarea resize tracking.
+- Rewrote `overlay.test.ts` with mirror-based assertions; added `mirror-content.test.ts` for domain pure-function tests.
+- Fixed mirror text color: mirror now uses the original computed color captured before the `transparent` override, ensuring correct rendering on dark-themed pages and on repeated `show()` calls to the same target.
+- Added tests for repeated `show()` on same target (color preservation) and `hide()` on DOM-detached target (graceful cleanup).
+- Removed `caret.ts` and `caret.test.ts`: dead code with zero production imports; `ToastMessage` uses `getBoundingClientRect()` directly.
+- Removed `MirrorLayout` value object (YAGNI): geometry in `positionMirror()` is trivial and doesn't warrant a domain type.
+- Added ResizeObserver integration tests: `observe()` on show, callback triggers repositioning, `disconnect()` on hide, observer swap on target switch.
+- Updated glossary: revised Overlay definition, added Mirror Overlay, Ghost Span, MirrorContent entries.
+- Updated content-script README with file table, mirror overlay lifecycle, and key invariants.
+- Added ADR-0010 addendum documenting `caret.ts` and `MirrorLayout` removal.
+
 - Eliminated duplicated `DEFAULT_SETTINGS` / `DEFAULT_SKIP` in controller.ts by importing from `DEFAULT_USER_PREFERENCES` in core domain.
 - Extracted presentation-layer constants in overlay.ts: CSS class names (`CSS`), ARIA attributes (`ARIA`), layout tuning knobs (`LAYOUT`), and `DEFAULT_TOAST_DURATION_MS`. Exported `CSS` for use by controller.ts.
 - Adopted `responseConstraint` (Chrome 137+ structured output) on `session.prompt()` to enforce JSON output via JSON Schema instead of prompt-level instructions.

@@ -26,11 +26,11 @@ emoji-completion/
 ├─ wxt.config.ts
 ├─ tests/
 │  └─ unit/
-│     ├─ caret.test.ts
 │     ├─ context-service.test.ts
 │     ├─ emoji-suggestion-usecase.test.ts
 │     ├─ key-utils.test.ts
 │     ├─ logger.test.ts
+│     ├─ mirror-content.test.ts
 │     ├─ orchestrator.test.ts
 │     ├─ overlay.test.ts
 │     ├─ prompt-api-detection.test.ts
@@ -55,7 +55,9 @@ emoji-completion/
 │  │  ├─ 0005-context-extraction-settings.md
 │  │  ├─ 0006-domain-model-design.md
 │  │  ├─ 0007-bidirectional-sentence-context.md
-│  │  └─ 0008-prompt-and-sampling-tuning.md
+│  │  ├─ 0008-prompt-and-sampling-tuning.md
+│  │  ├─ 0009-chain-of-thought-reason.md
+│  │  └─ 0010-inline-mirror-overlay.md
 │  ├─ architecture/
 │  │  └─ repository-structure.md
 │  ├─ dev/
@@ -73,12 +75,11 @@ emoji-completion/
    │  │  └─ logger.ts
    │  ├─ adapters/                  # Prompt API, storage, availability, etc.
    │  │  └─ prompt-api.ts
-   │  ├─ content-script/            # DOM integration, caret/overlay UI
+   │  ├─ content-script/            # DOM integration, overlay UI
    │  │  ├─ controller.ts
    │  │  ├─ dom-utils.ts
    │  │  ├─ input-snapshot.ts
    │  │  ├─ overlay.ts
-   │  │  ├─ caret.ts
    │  │  └─ README.md
    │  └─ options/                   # Options page UI
    ├─ core/                         # Pure domain logic (no browser/DOM APIs)
@@ -96,6 +97,8 @@ emoji-completion/
    │  │  │  ├─ context.ts
    │  │  │  ├─ context-extraction.ts
    │  │  │  └─ context-hash.ts
+   │  │  ├─ overlay/
+   │  │  │  └─ mirror-content.ts
    │  │  ├─ preferences/
    │  │  │  └─ user-preferences.ts
    │  │  └─ suggestion/

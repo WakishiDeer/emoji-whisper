@@ -1,9 +1,16 @@
-.ec-ghost {
+.ec-mirror {
   position: absolute;
   z-index: 2147483647;
+  pointer-events: none;
+  overflow: hidden;
+  background: transparent;
+  margin: 0;
+}
+
+.ec-mirror-ghost {
+  position: relative;
+  opacity: 0.5;
   pointer-events: auto;
-  opacity: 0.80;
-  white-space: pre;
   cursor: default;
 }
 
@@ -26,7 +33,7 @@
   pointer-events: none;
 }
 
-.ec-ghost:hover .ec-ghost-tooltip {
+.ec-mirror-ghost:hover .ec-ghost-tooltip {
   display: block;
 }
 

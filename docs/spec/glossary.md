@@ -12,7 +12,10 @@ This document defines the ubiquitous language used throughout the Emoji Suggesti
 | Context | A text fragment extracted from the text **before the cursor position**, used to generate a suggestion. Extraction respects `maxContextLength` (default: 200 characters) and optionally adjusts to sentence boundaries. |
 | Sentence Boundary | A character that marks the end of a sentence for context extraction purposes. Boundary characters are: `.`, `!`, `?`, `。`, `！`, `？`, and newline (`\n`). When `adjustToBoundary` is true, the context is trimmed to start after the first boundary character found within the extraction window. |
 | Trigger | A condition that initiates suggestion generation. The default trigger is an idle pause after typing (and optionally pressing Enter), when the input is in a safe state (not composing, caret-only, sufficient length). |
-| Overlay | A semi-transparent UI element displayed near the input field showing the suggestion. |
+| Overlay | A semi-transparent UI element rendered via an inline mirror div that covers the target input's content area. The mirror reproduces the input's text with the suggested emoji rendered inline at the caret, preventing the suggestion from covering existing text. See also: Mirror Overlay, Ghost Span. |
+| Mirror Overlay | The transparent `<div>` (`.ec-mirror`) positioned exactly over the target input's content area. It copies all text-layout styles from the target and renders the full text with the ghost emoji inline at the caret position. The target's native text is hidden via `color: transparent`. |
+| Ghost Span | The `<span>` (`.ec-mirror-ghost`) inside the mirror overlay that renders the suggested emoji at reduced opacity (0.5). Hovering over it reveals the reason tooltip. |
+| MirrorContent | A domain value object (`src/core/domain/overlay/mirror-content.ts`) representing the decomposition of input text at the caret into three segments: `before`, `ghost` (emoji), and `after`. Produced by the pure function `splitTextAtCaret`. |
 | Accept | The action of inserting the suggested emoji into the text. |
 | Dismiss | The action of closing the suggestion without inserting it, typically via the Esc key. |
 | Skip | Bypassing suggestion generation due to conditions (e.g., insufficient text length, empty input). |

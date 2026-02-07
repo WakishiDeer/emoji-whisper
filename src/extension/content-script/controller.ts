@@ -134,7 +134,7 @@ export function createEmojiCompletionController(
     // Prevent focus steal: clicks on the ghost overlay should not blur the input.
     if (evt.type === 'mousedown' && overlay.isVisible()) {
       const target = evt.target as Element | null;
-      if (target?.closest(`.${CSS.ghost}`)) {
+      if (target?.closest(`.${CSS.mirrorGhost}`)) {
         evt.preventDefault();
         return;
       }
