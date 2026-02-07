@@ -6,6 +6,13 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [Unreleased]
 
+- Slimmed system rules from 12 lines to 6: removed category nouns ("object, animal, food, activity, place") and generic terms ("sentiment/mood", "metaphorical match") that SLMs attended to and hallucinated into output. Merged proximity, cursor, and anti-hallucination guidance into fewer, more direct instructions.
+- Refactored prompt assembly to inject only the few-shot section matching the detected cursor position (beginning / end / mid-text), reducing per-inference example tokens from ~530 (all 17 examples) to ~40–160 (2–5 examples). Character mode injects short-input examples only.
+- Added anti-hallucination rule: "In 'reason', ONLY cite words that actually appear in the provided Text. Never reference words from the examples."
+- Extracted few-shot examples into module-private constants (`EXAMPLES_SHORT`, `EXAMPLES_END_OF_TEXT`, `EXAMPLES_BEGINNING_OF_TEXT`, `EXAMPLES_MID_TEXT`); `systemPromptTemplate` now contains rules only.
+- Added proximity emphasis: new system rule instructing the model that words immediately adjacent to [CURSOR] are the strongest clues. Updated all few-shot reason formats to "Immediately before/after" wording, and enhanced sentence-mode suffix to "Focus on the words immediately adjacent to [CURSOR] first".
+- Added 5 beginning-of-text `[CURSOR]` few-shot examples (cat, flowers, rain, soccer, airplane) teaching the model to rely on words after cursor when nothing precedes it.
+- Reduced end-of-text `[CURSOR]` examples from 10 to 5 (guitar, debugging, overwhelmed, birthday, home) to match other sections and reduce prompt token count.
 - Narrowed default sentence context to cursor sentence only: `beforeSentenceCount` 2→0, `afterSentenceCount` 1→0. The partial sentence containing the cursor is always included; additional sentences are no longer sent by default, reducing SLM drift toward overall text sentiment. Settings fields and validation (0–10 range) retained for future user-settings exposure.
 - Lowered default `temperature` from 0.6 to 0.4 and `topK` from 8 to 5 for tighter, more position-focused inference with the narrower context window.
 - Improved cursor-position awareness: added 2 new system prompt rules instructing the model to analyze context before AND after [CURSOR] and to mention surrounding context in its reasoning.
