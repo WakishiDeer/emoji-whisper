@@ -57,7 +57,8 @@ emoji-completion/
 │  │  ├─ 0007-bidirectional-sentence-context.md
 │  │  ├─ 0008-prompt-and-sampling-tuning.md
 │  │  ├─ 0009-chain-of-thought-reason.md
-│  │  └─ 0010-inline-mirror-overlay.md
+│  │  ├─ 0010-inline-mirror-overlay.md
+│  │  └─ 0011-cursor-position-prompt-tuning.md
 │  ├─ architecture/
 │  │  └─ repository-structure.md
 │  ├─ dev/

@@ -27,12 +27,13 @@ describe('buildEmojiPrompt', () => {
     expect(prompt).toContain(config.systemPromptTemplate);
     expect(prompt).toContain(`Text:\n${context}`);
     expect(prompt).toContain('[CURSOR]');
+    expect(prompt).toContain('Analyze the words before and after [CURSOR] carefully');
     expect(prompt).toContain('Prefer a specific emoji over a generic sentiment emoji');
   });
 
   it('DEFAULT_PROMPT_CONFIG includes topK and content quality instructions', () => {
-    expect(DEFAULT_PROMPT_CONFIG.topK).toBe(8);
-    expect(DEFAULT_PROMPT_CONFIG.temperature).toBe(0.7);
+    expect(DEFAULT_PROMPT_CONFIG.topK).toBe(5);
+    expect(DEFAULT_PROMPT_CONFIG.temperature).toBe(0.4);
     expect(DEFAULT_PROMPT_CONFIG.maxTokens).toBe(64);
     // Format instructions removed — responseConstraint enforces JSON structure.
     // Content quality guidance remains.
@@ -41,6 +42,9 @@ describe('buildEmojiPrompt', () => {
     expect(DEFAULT_PROMPT_CONFIG.systemPromptTemplate).toContain('specific object');
     expect(DEFAULT_PROMPT_CONFIG.systemPromptTemplate).toContain('single word or short phrase');
     expect(DEFAULT_PROMPT_CONFIG.systemPromptTemplate).toContain('closest metaphorical match');
+    // Cursor-position awareness rules
+    expect(DEFAULT_PROMPT_CONFIG.systemPromptTemplate).toContain('[CURSOR] marker is present');
+    expect(DEFAULT_PROMPT_CONFIG.systemPromptTemplate).toContain('before AND after [CURSOR]');
     // Verify JSON format instruction is NOT present (enforced by responseConstraint instead).
     expect(DEFAULT_PROMPT_CONFIG.systemPromptTemplate).not.toContain('Output MUST be valid JSON');
     expect(DEFAULT_PROMPT_CONFIG.systemPromptTemplate).not.toContain('respond with valid JSON');
@@ -48,23 +52,39 @@ describe('buildEmojiPrompt', () => {
 
   it('DEFAULT_PROMPT_CONFIG covers diverse few-shot categories', () => {
     const tpl = DEFAULT_PROMPT_CONFIG.systemPromptTemplate;
-    // Sentence-level specificity
-    expect(tpl).toContain('🎸');
-    expect(tpl).toContain('😊');
-    // Single words
+    // Short input without cursor
+    expect(tpl).toContain('Examples (short input without cursor)');
+    expect(tpl).toContain('"pizza"');
     expect(tpl).toContain('🍕');
+    expect(tpl).toContain('"rocket"');
     expect(tpl).toContain('🚀');
-    // Tech terms
+    // End-of-text with [CURSOR]: all examples include [CURSOR] marker
+    expect(tpl).toContain('Examples (end-of-text with [CURSOR])');
+    expect(tpl).toContain('playing guitar with friends [CURSOR]');
+    expect(tpl).toContain('🎸');
+    expect(tpl).toContain('I am so happy today [CURSOR]');
+    expect(tpl).toContain('😊');
+    // End-of-text with [CURSOR]: tech terms
+    expect(tpl).toContain('debugging the code [CURSOR]');
     expect(tpl).toContain('🐛');
     expect(tpl).toContain('📦');
-    // Abstract emotions
+    // End-of-text with [CURSOR]: abstract emotions
     expect(tpl).toContain('😵‍💫');
     expect(tpl).toContain('🏆');
-    // Greetings / idioms
+    // End-of-text with [CURSOR]: greetings / idioms
     expect(tpl).toContain('☀️');
     expect(tpl).toContain('🎂');
-    // No-direct-emoji concepts
+    // End-of-text with [CURSOR]: no-direct-emoji concepts
     expect(tpl).toContain('📅');
     expect(tpl).toContain('🏠');
+    // End-of-text reasons use "Before cursor:" format
+    expect(tpl).toContain('Before cursor:');
+    // Mid-text [CURSOR] examples
+    expect(tpl).toContain('Examples (mid-text with [CURSOR])');
+    expect(tpl).toContain('🏪');
+    expect(tpl).toContain('🐕');
+    expect(tpl).toContain('🎶');
+    expect(tpl).toContain('📖');
+    expect(tpl).toContain('🔥');
   });
 });

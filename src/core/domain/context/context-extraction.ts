@@ -35,8 +35,8 @@ export type SentenceContextSettings = Readonly<{
 }>;
 
 export const DEFAULT_SENTENCE_CONTEXT_SETTINGS: SentenceContextSettings = {
-    beforeSentenceCount: 2,
-    afterSentenceCount: 1,
+    beforeSentenceCount: 0,
+    afterSentenceCount: 0,
     cursorMarker: '[CURSOR]',
 };
 

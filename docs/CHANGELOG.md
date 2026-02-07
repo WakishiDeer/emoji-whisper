@@ -6,6 +6,18 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [Unreleased]
 
+- Narrowed default sentence context to cursor sentence only: `beforeSentenceCount` 2→0, `afterSentenceCount` 1→0. The partial sentence containing the cursor is always included; additional sentences are no longer sent by default, reducing SLM drift toward overall text sentiment. Settings fields and validation (0–10 range) retained for future user-settings exposure.
+- Lowered default `temperature` from 0.6 to 0.4 and `topK` from 8 to 5 for tighter, more position-focused inference with the narrower context window.
+- Improved cursor-position awareness: added 2 new system prompt rules instructing the model to analyze context before AND after [CURSOR] and to mention surrounding context in its reasoning.
+- Added 5 mid-text [CURSOR] few-shot examples (market, dog, music, book, campfire) to teach the model position-sensitive emoji selection.
+- Added `[CURSOR]` marker to all end-of-text few-shot examples so they match actual sentence-mode input format; unified reason format to "Before cursor: ..." for consistency with mid-text examples.
+- Separated short-input examples (without cursor) into their own "Examples (short input without cursor)" section for character-mode prompts.
+- Reorganised few-shot examples into "end-of-text" and "mid-text with [CURSOR]" sections for clarity.
+- Lowered default `temperature` from 0.7 to 0.6 for more deterministic, context-accurate suggestions.
+- Strengthened sentence-mode user suffix to instruct the model to "Analyze the words before and after [CURSOR] carefully".
+- Expanded `expectedInputs.languages` in Prompt API adapter from `['en']` to `['en', 'ja', 'es']` to improve multilingual input handling.
+- Added ADR 0011: Cursor-position-aware prompt tuning.
+
 - Added ADR 0010: Inline Mirror Overlay — replace absolute-positioned ghost div with a mirror overlay that renders the emoji inline with text flow, preventing overlay from covering existing text.
 - Added domain value objects `MirrorContent` and `MirrorLayout` in `src/core/domain/overlay/` for pure, testable overlay geometry and text decomposition.
 - Refactored `GhostOverlay` to use inline mirror overlay: creates a transparent mirror div over the target, renders text with ghost emoji inline at the caret, hides native text via `color: transparent` + `caretColor` preservation.

@@ -56,8 +56,8 @@ function buildLanguageModelOptions(config: PromptConfig): {
   expectedOutputs: LanguageModelExpectedIO[];
   outputLanguage: NonNullable<PromptConfig['outputLanguage']>;
 } {
-  // Our prompts are currently authored in English.
-  const expectedInputs: LanguageModelExpectedIO[] = [{ type: 'text', languages: ['en'] }];
+  // Prompts are authored in English but user text may be in other languages.
+  const expectedInputs: LanguageModelExpectedIO[] = [{ type: 'text', languages: ['en', 'ja', 'es'] }];
 
   // Constrain outputs if requested; default to English.
   const outputLanguage = config.outputLanguage ?? 'en';
