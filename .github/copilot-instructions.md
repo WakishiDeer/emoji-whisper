@@ -64,7 +64,7 @@ All files in this directory describe how to develop, test, and complete features
 ### Privacy and Security
 - All AI inference MUST use Chrome's on-device Prompt API. No remote calls allowed.
 - Never transmit user text off-device.
-- Request only minimal permissions (`activeTab`, `storage`).
+- Request only minimal permissions. Add permissions (e.g. `storage`) only when the feature that requires them is implemented.
 
 ### Testing
 - Write unit tests in `tests/unit/` using Vitest.
@@ -86,4 +86,4 @@ All files in this directory describe how to develop, test, and complete features
 
 ## Summary
 
-This extension suggests a single emoji based on user input using Chrome/Edge's on-device AI. It targets `<textarea>` and `<input type="text">` only, proposes suggestions after an idle pause (and optionally Enter), uses Tab to accept suggestions, and prioritizes privacy by never sending data off-device. Follow the specifications, respect the domain model, write tests first, and keep everything in English.
+Emoji Whisper suggests a single emoji based on user input using Chrome/Edge's on-device AI. It targets `<textarea>` and `<input type="text">` only, proposes suggestions after an idle pause (and optionally Enter), uses Tab to accept suggestions, and prioritizes privacy by never sending data off-device. Follow the specifications, respect the domain model, write tests first, and keep everything in English.

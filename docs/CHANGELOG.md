@@ -7,6 +7,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 ## [Unreleased]
 
 - Renamed extension from "Emoji Completion" to "Emoji Whisper"; updated package name to `emoji-whisper`, manifest display name, and all documentation references.
+- Removed unused `storage` and `activeTab` permissions from manifest (minimal-permission principle). Will re-add `storage` when persistent settings are implemented.
 - Slimmed system rules from 12 lines to 6: removed category nouns ("object, animal, food, activity, place") and generic terms ("sentiment/mood", "metaphorical match") that SLMs attended to and hallucinated into output. Merged proximity, cursor, and anti-hallucination guidance into fewer, more direct instructions.
 - Refactored prompt assembly to inject only the few-shot section matching the detected cursor position (beginning / end / mid-text), reducing per-inference example tokens from ~530 (all 17 examples) to ~40–160 (2–5 examples). Character mode injects short-input examples only.
 - Added anti-hallucination rule: "In 'reason', ONLY cite words that actually appear in the provided Text. Never reference words from the examples."

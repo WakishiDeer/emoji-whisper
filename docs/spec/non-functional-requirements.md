@@ -11,7 +11,7 @@ The following non‑functional requirements describe qualities that the extensio
 ## Privacy and security
 
 * **Client‑side processing.**  All suggestion generation MUST occur via the Chrome/Edge on‑device Prompt API; no user text or model input may be sent to external servers.  The extension MUST not include any analytics, tracking or advertising scripts.
-* **Permissions.**  The extension’s `manifest.json` MUST request only the minimal permissions required (likely `activeTab` and `storage`).  It MUST NOT request host permissions for all websites unnecessarily.  It MUST not run on pages where the browser forbids content scripts (e.g. the Chrome Web Store, `chrome://` pages, or `edge://` pages).
+* **Permissions.**  The extension's `manifest.json` MUST request only the minimal permissions required.  Permissions such as `storage` SHOULD be added only when the corresponding feature (e.g. persistent settings) is implemented.  It MUST NOT request host permissions for all websites unnecessarily.  It MUST not run on pages where the browser forbids content scripts (e.g. the Chrome Web Store, `chrome://` pages, or `edge://` pages).
 
 ## Compatibility
 
