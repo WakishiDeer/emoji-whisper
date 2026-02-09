@@ -21,8 +21,10 @@ emoji-whisper/
 ├─ eslint.config.mjs
 ├─ package.json
 ├─ pnpm-lock.yaml
+├─ pnpm-workspace.yaml
 ├─ tsconfig.json
 ├─ tsconfig.eslint.json
+├─ web-ext.config.ts
 ├─ wxt.config.ts
 ├─ tests/
 │  └─ unit/
@@ -62,11 +64,19 @@ emoji-whisper/
 │  ├─ architecture/
 │  │  └─ repository-structure.md
 │  ├─ dev/
+│  │  ├─ ai-coding-guidelines.md
+│  │  ├─ definition-of-done.md
+│  │  ├─ workflow-tdd.md
 │  │  └─ wxt-development-guidelines.md
+│  ├─ proposals/
 │  ├─ spec/
+│  │  ├─ acceptance-criteria.md
+│  │  ├─ functional-requirements.md
+│  │  ├─ glossary.md
+│  │  ├─ non-functional-requirements.md
+│  │  ├─ out-of-scope.md
+│  │  └─ overview.md
 │  └─ CHANGELOG.md
-├─ modules/                         # Local WXT modules (optional)
-├─ public/                          # Copied as-is to build output
 └─ src/
    ├─ entrypoints/                  # WXT entrypoints (bundled by WXT)
    │  └─ content.ts
@@ -76,13 +86,12 @@ emoji-whisper/
    │  │  └─ logger.ts
    │  ├─ adapters/                  # Prompt API, storage, availability, etc.
    │  │  └─ prompt-api.ts
-   │  ├─ content-script/            # DOM integration, overlay UI
-   │  │  ├─ controller.ts
-   │  │  ├─ dom-utils.ts
-   │  │  ├─ input-snapshot.ts
-   │  │  ├─ overlay.ts
-   │  │  └─ README.md
-   │  └─ options/                   # Options page UI
+   │  └─ content-script/            # DOM integration, overlay UI
+   │     ├─ controller.ts
+   │     ├─ dom-utils.ts
+   │     ├─ input-snapshot.ts
+   │     ├─ overlay.ts
+   │     └─ README.md
    ├─ core/                         # Pure domain logic (no browser/DOM APIs)
    │  ├─ shared/                    # Cross-cutting, domain-agnostic utilities/types
    │  │  ├─ hash/
@@ -122,11 +131,9 @@ emoji-whisper/
    │  │  └─ preferences-repository.ts
    │  └─ events/                    # Domain events
    │     └─ suggestion-events.ts
-   ├─ assets/                       # CSS/images processed by WXT (optional)
-   │  └─ content.css
+   ├─ assets/                       # CSS/images processed by WXT
+   │  ├─ content.css
+   │  ├─ icon.svg
+   │  └─ icon-background.svg
    └─ env.d.ts
-   ├─ components/                   # UI components (optional)
-   ├─ composables/                  # Vue composables (optional)
-   ├─ hooks/                        # React/Solid hooks (optional)
-   └─ utils/                        # Generic utilities (optional)
 ```
