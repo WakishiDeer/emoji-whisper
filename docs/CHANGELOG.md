@@ -6,6 +6,8 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [Unreleased]
 
+- Added comprehensive test site (`tests/e2e/fixtures/test-site.html`) covering all functional requirements (FR-1–FR-10) and acceptance criteria (AC-1–AC-13). Includes 9 sections: basic suggestion flow (incl. AI unavailability/failure per AC-2, FR-3, FR-7), unsupported input types, skip conditions (incl. AC-8 settings-persistence checklist), keyboard behavior, cancellation & cooldown (incl. caret-move cancellation per AC-10), overlay & tooltip, IME composition, edge cases (RTL, scroll, resize, Shadow DOM, long text, cursor-middle, custom styles), and dynamic elements. Fixed URL-only skip wording to match default preferences; replaced non-English fixture strings with English equivalents; marked Shadow DOM and dynamic-element cases as exploratory. All elements carry `data-testid` attributes for future Playwright E2E tests.
+- Updated docs (ADR 0004, workflow-tdd, wxt-development-guidelines) to reference the E2E test fixture page and describe manual testing workflow.
 - Renamed extension from "Emoji Completion" to "Emoji Whisper"; updated package name to `emoji-whisper`, manifest display name, and all documentation references.
 - Removed unused `storage` and `activeTab` permissions from manifest (minimal-permission principle). Will re-add `storage` when persistent settings are implemented.
 - Redesigned extension icon (icon.svg): larger face + cursor + sparkles on transparent background with glow filters and ghost-fade mask; lavender (#D4C8FF) sparkles/cursor for light-background visibility.

@@ -27,20 +27,23 @@ emoji-whisper/
 ├─ web-ext.config.ts
 ├─ wxt.config.ts
 ├─ tests/
-│  └─ unit/
-│     ├─ context-service.test.ts
-│     ├─ emoji-suggestion-usecase.test.ts
-│     ├─ key-utils.test.ts
-│     ├─ logger.test.ts
-│     ├─ mirror-content.test.ts
-│     ├─ orchestrator.test.ts
-│     ├─ overlay.test.ts
-│     ├─ prompt-api-detection.test.ts
-│     ├─ prompt-service.test.ts
-│     ├─ suggestion-parser.test.ts
-│     ├─ suggestion-session.test.ts
-│     ├─ throttle.test.ts
-│     └─ user-preferences.test.ts
+│  ├─ unit/
+│  │  ├─ context-service.test.ts
+│  │  ├─ emoji-suggestion-usecase.test.ts
+│  │  ├─ key-utils.test.ts
+│  │  ├─ logger.test.ts
+│  │  ├─ mirror-content.test.ts
+│  │  ├─ orchestrator.test.ts
+│  │  ├─ overlay.test.ts
+│  │  ├─ prompt-api-detection.test.ts
+│  │  ├─ prompt-service.test.ts
+│  │  ├─ suggestion-parser.test.ts
+│  │  ├─ suggestion-session.test.ts
+│  │  ├─ throttle.test.ts
+│  │  └─ user-preferences.test.ts
+│  └─ e2e/
+│     └─ fixtures/
+│        └─ test-site.html          # Comprehensive manual/E2E test page
 ├─ .output/                         # WXT build output (generated)
 ├─ .wxt/                            # WXT generated files (generated)
 ├─ .github/

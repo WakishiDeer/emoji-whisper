@@ -10,6 +10,7 @@ This guide describes how to turn user requirements into working code using speci
 ## 2. Derive tests from acceptance criteria
 
 * For each acceptance criterion, write a corresponding E2E test scenario using Playwright. Use descriptive test names that reference the criteria (e.g. `AC-1 generates a suggestion when AI is available`). Place these tests in `tests/e2e/`.
+* E2E tests should navigate to the shared test fixture page at `tests/e2e/fixtures/test-site.html`. This page contains labelled inputs and scenarios for every AC, with `data-testid` attributes for stable selectors. Serve it via a local HTTP server (e.g. `npx serve tests/e2e/fixtures`) during test runs.
 * Identify pure functions or small pieces of logic implied by the requirements (domain rules, parsers, state machines). Write unit tests for these using Vitest, placing them in `tests/unit/`.
   * Unit tests are expected to run via `pnpm test:run`.
   * Prefer unit tests for logic in `src/core/` (no DOM or browser APIs).

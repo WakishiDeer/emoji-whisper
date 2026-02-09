@@ -93,6 +93,19 @@ Sourcemap note:
 - WXT may emit inline sourcemaps with `sources` like `../../../src/...`.
 - The VS Code attach configuration includes `sourceMapPathOverrides` to map these back to local `src/...`.
 
+## Manual Testing with the Test Site
+
+A comprehensive test fixture page lives at `tests/e2e/fixtures/test-site.html`. It covers all acceptance criteria (AC-1 – AC-13) and functional requirements across 9 sections: basic suggestion flow, unsupported input types, skip conditions, keyboard behaviour, cancellation & cooldown, overlay & tooltip, IME composition, edge cases (RTL, scroll, resize, Shadow DOM), and dynamic elements.
+
+Quick start:
+
+1. Build the extension: `pnpm build:dev`
+2. Load the unpacked extension from `.output/chrome-mv3-dev/` in Chrome (`chrome://extensions`).
+3. Serve the fixture: `npx serve tests/e2e/fixtures -l 3333`
+4. Open `http://localhost:3333/test-site.html` and walk through each section.
+
+> **Note:** The Prompt API (`LanguageModel`) works on `localhost`. No special origin allowlisting is required — only Chrome 138+ with on-device AI enabled.
+
 ## File Operations
 
 - Any file/folder operation (create, move, rename, delete) MUST be reflected by updating the ASCII tree in [docs/architecture/repository-structure.md](../architecture/repository-structure.md).

@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emoji Whisper – Comprehensive Test Site</title>
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --surface: #ffffff;
+      --border: #dee2e6;
+      --text: #212529;
+      --text-muted: #6c757d;
+      --accent: #0d6efd;
+      --badge-must: #dc3545;
+      --badge-should: #fd7e14;
+      --badge-could: #198754;
+      --badge-ac: #6f42c1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 0 0 4rem;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+      padding: 1.5rem 2rem;
+    }
+
+    header h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+    header p  { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0; }
+
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 99;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    nav a {
+      font-size: 0.8rem;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    nav a:hover { background: var(--accent); color: #fff; }
+
+    main { max-width: 960px; margin: 0 auto; padding: 1rem 2rem; }
+
+    section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    section h2 {
+      font-size: 1.15rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.15em 0.5em;
+      border-radius: 3px;
+      color: #fff;
+      vertical-align: middle;
+      margin-left: 0.25rem;
+    }
+    .badge-must   { background: var(--badge-must); }
+    .badge-should { background: var(--badge-should); }
+    .badge-could  { background: var(--badge-could); }
+    .badge-ac     { background: var(--badge-ac); }
+
+    .test-case {
+      margin-bottom: 1.25rem;
+      padding: 1rem;
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      background: #fdfdfe;
+    }
+
+    .test-case h3 {
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .test-case .instructions {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .test-case .expected {
+      font-size: 0.78rem;
+      color: var(--badge-must);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    textarea, input[type="text"], input[type="email"],
+    input[type="password"], input[type="number"], input[type="url"],
+    input[type="search"], input[type="tel"] {
+      display: block;
+      width: 100%;
+      max-width: 500px;
+      padding: 0.5rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 0.25rem;
+    }
+
+    textarea:focus, input:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+
+    [contenteditable="true"] {
+      display: block;
+      width: 100%;
+      max-width: 500px;
+      min-height: 60px;
+      padding: 0.5rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 0.25rem;
+    }
+
+    button {
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      margin-right: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    button:hover { opacity: 0.85; }
+
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-width: 500px;
+    }
+
+    .note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    #dynamic-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .dynamic-item {
+      padding: 0.5rem;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <h1>🧪 Emoji Whisper – Test Site</h1>
+  <p>Comprehensive test page covering FR-1–FR-10 and AC-1–AC-13. Load the extension, then test each section below.</p>
+</header>
+
+<!-- ===== TOC NAV ===== -->
+<nav>
+  <a href="#sec-basic">1. Basic Flow</a>
+  <a href="#sec-unsupported">2. Unsupported Types</a>
+  <a href="#sec-skip">3. Skip Conditions</a>
+  <a href="#sec-keyboard">4. Keyboard</a>
+  <a href="#sec-cancel">5. Cancel &amp; Cooldown</a>
+  <a href="#sec-overlay">6. Overlay &amp; Tooltip</a>
+  <a href="#sec-ime">7. IME / Composition</a>
+  <a href="#sec-edge">8. Edge Cases</a>
+  <a href="#sec-dynamic">9. Dynamic Elements</a>
+</nav>
+
+<main>
+
+<!-- ========================================================================
+     SECTION 1 – BASIC SUGGESTION FLOW
+     ======================================================================== -->
+<section id="sec-basic">
+  <h2>
+    1. Basic Suggestion Flow
+    <span class="badge badge-must">FR-1</span>
+    <span class="badge badge-must">FR-2</span>
+    <span class="badge badge-must">FR-3</span>
+    <span class="badge badge-must">FR-4</span>
+    <span class="badge badge-must">FR-5</span>
+    <span class="badge badge-must">FR-7</span>
+    <span class="badge badge-ac">AC-1</span>
+    <span class="badge badge-ac">AC-2</span>
+  </h2>
+
+  <!-- 1-1 Empty textarea -->
+  <div class="test-case">
+    <h3>1-1. Empty textarea – type &amp; trigger</h3>
+    <p class="instructions">
+      Type at least 5 characters (e.g. "I love sunny days"), then <strong>stop typing</strong>
+      and wait ~700 ms for the suggestion to appear.
+      Press <kbd>Tab</kbd> to accept the emoji.
+    </p>
+    <p class="expected">Expected: ghost emoji appears inline → Tab inserts it.</p>
+    <label for="basic-textarea">textarea</label>
+    <textarea id="basic-textarea" data-testid="basic-textarea" rows="3" cols="50"
+              placeholder="Type here…"></textarea>
+  </div>
+
+  <!-- 1-2 Pre-filled textarea -->
+  <div class="test-case">
+    <h3>1-2. Pre-filled textarea – cursor at end</h3>
+    <p class="instructions">
+      Click at the <strong>end</strong> of the pre-filled text, then wait for idle.
+      After the suggestion appears, press <kbd>Tab</kbd> to accept.
+    </p>
+    <p class="expected">Expected: suggestion triggers on existing text; Tab inserts emoji at caret.</p>
+    <label for="basic-textarea-prefilled">textarea (pre-filled)</label>
+    <textarea id="basic-textarea-prefilled" data-testid="basic-textarea-prefilled" rows="3" cols="50"
+    >Today was a great day at the park</textarea>
+  </div>
+
+  <!-- 1-3 Input text -->
+  <div class="test-case">
+    <h3>1-3. Input text – basic trigger</h3>
+    <p class="instructions">
+      Type at least 5 characters, wait for idle, then press <kbd>Tab</kbd>.
+    </p>
+    <p class="expected">Expected: ghost emoji appears; Tab inserts it.</p>
+    <label for="basic-input-text">input[type=text]</label>
+    <input type="text" id="basic-input-text" data-testid="basic-input-text"
+           placeholder="Type here…">
+  </div>
+
+  <!-- 1-4 Multiline Enter trigger -->
+  <div class="test-case">
+    <h3>1-4. Multiline textarea – Enter trigger</h3>
+    <p class="instructions">
+      Type a sentence (≥5 chars), then press <kbd>Enter</kbd>.
+      A new line is inserted and suggestion MAY trigger immediately.
+    </p>
+    <p class="expected">Expected: suggestion may trigger right after Enter in a multiline textarea.</p>
+    <label for="basic-textarea-multiline">textarea (multiline)</label>
+    <textarea id="basic-textarea-multiline" data-testid="basic-textarea-multiline" rows="5" cols="50"
+              placeholder="Type a sentence, then press Enter…"></textarea>
+  </div>
+
+  <!-- 1-5 AI unavailable / downloading -->
+  <div class="test-case">
+    <h3>1-5. AI unavailable or downloading</h3>
+    <p class="instructions">
+      Open this page in a browser that does <strong>not</strong> support Chrome/Edge built-in AI
+      (e.g. Firefox, or Chrome &lt;138 without AI flags), or use a profile where the AI model
+      has not finished downloading. Type ≥5 characters and wait for idle.
+    </p>
+    <p class="expected">Expected: NO Prompt API call; a brief anchored toast appears
+      (e.g. "Emoji suggestions require the browser's built-in AI…"); no overlay; Tab behaves
+      normally; user can keep typing without interference (AC-2, FR-3).</p>
+    <label for="basic-unavailable">textarea</label>
+    <textarea id="basic-unavailable" data-testid="basic-unavailable" rows="3" cols="50"
+              placeholder="Test with AI unavailable…"></textarea>
+  </div>
+
+  <!-- 1-6 Toast throttle (30 s) -->
+  <div class="test-case">
+    <h3>1-6. Unavailable-toast throttle</h3>
+    <p class="instructions">
+      With AI unavailable (same setup as 1-5), trigger the toast, then immediately
+      switch fields or type more to trigger it again within 30 seconds.
+    </p>
+    <p class="expected">Expected: at most one toast per 30 seconds; no repeated spam (FR-3).</p>
+    <label for="basic-toast-throttle">textarea</label>
+    <textarea id="basic-toast-throttle" data-testid="basic-toast-throttle" rows="3" cols="50"
+              placeholder="Repeat trigger within 30 s…"></textarea>
+  </div>
+
+  <!-- 1-7 Generation failure -->
+  <div class="test-case">
+    <h3>1-7. Generation failure (Prompt API error)</h3>
+    <p class="instructions">
+      If the Prompt API throws an error or times out during generation
+      (e.g. disable the AI model mid-session, or simulate a network/model error),
+      verify the extension handles it gracefully.
+    </p>
+    <p class="expected">Expected: brief unobtrusive message; no overlay shown; Tab not intercepted
+      when no suggestion is visible (FR-7).</p>
+    <label for="basic-gen-failure">textarea</label>
+    <textarea id="basic-gen-failure" data-testid="basic-gen-failure" rows="3" cols="50"
+              placeholder="Type here while AI fails…"></textarea>
+  </div>
+</section>
+
+<!-- ========================================================================
+     SECTION 2 – UNSUPPORTED INPUT TYPES
+     ======================================================================== -->
+<section id="sec-unsupported">
+  <h2>
+    2. Unsupported Input Types
+    <span class="badge badge-must">FR-1</span>
+    <span class="badge badge-ac">AC-5</span>
+  </h2>
+
+  <p class="instructions" style="margin-bottom:1rem;">
+    Type text in each of the following. <strong>No suggestion should ever appear.</strong>
+  </p>
+
+  <!-- 2-1 contenteditable -->
+  <div class="test-case">
+    <h3>2-1. contenteditable div</h3>
+    <p class="expected">Expected: NO suggestion.</p>
+    <label>div[contenteditable]</label>
+    <div contenteditable="true" id="unsupported-contenteditable"
+         data-testid="unsupported-contenteditable"
+         style="min-height:60px;">Type here…</div>
+  </div>
+
+  <!-- 2-2 input[email] -->
+  <div class="test-case">
+    <h3>2-2. input[type=email]</h3>
+    <p class="expected">Expected: NO suggestion.</p>
+    <label for="unsupported-email">input[type=email]</label>
+    <input type="email" id="unsupported-email" data-testid="unsupported-email"
+           placeholder="user@example.com">
+  </div>
+
+  <!-- 2-3 input[password] -->
+  <div class="test-case">
+    <h3>2-3. input[type=password]</h3>
+    <p class="expected">Expected: NO suggestion.</p>
+    <label for="unsupported-password">input[type=password]</label>
+    <input type="password" id="unsupported-password" data-testid="unsupported-password"
+           placeholder="••••••">
+  </div>
+
+  <!-- 2-4 input[number] -->
+  <div class="test-case">
+    <h3>2-4. input[type=number]</h3>
+    <p class="expected">Expected: NO suggestion.</p>
+    <label for="unsupported-number">input[type=number]</label>
+    <input type="number" id="unsupported-number" data-testid="unsupported-number"
+           placeholder="12345">
+  </div>
+
+  <!-- 2-5 input[url] -->
+  <div class="test-case">
+    <h3>2-5. input[type=url]</h3>
+    <p class="expected">Expected: NO suggestion.</p>
+    <label for="unsupported-url">input[type=url]</label>
+    <input type="url" id="unsupported-url" data-testid="unsupported-url"
+           placeholder="https://example.com">
+  </div>
+
+  <!-- 2-6 input[search] -->
+  <div class="test-case">
+    <h3>2-6. input[type=search]</h3>
+    <p class="expected">Expected: NO suggestion.</p>
+    <label for="unsupported-search">input[type=search]</label>
+    <input type="search" id="unsupported-search" data-testid="unsupported-search"
+           placeholder="Search…">
+  </div>
+
+  <!-- 2-7 input[tel] -->
+  <div class="test-case">
+    <h3>2-7. input[type=tel]</h3>
+    <p class="expected">Expected: NO suggestion.</p>
+    <label for="unsupported-tel">input[type=tel]</label>
+    <input type="tel" id="unsupported-tel" data-testid="unsupported-tel"
+           placeholder="090-1234-5678">
+  </div>
+</section>
+
+<!-- ========================================================================
+     SECTION 3 – SKIP CONDITIONS
+     ======================================================================== -->
+<section id="sec-skip">
+  <h2>
+    3. Skip Conditions
+    <span class="badge badge-must">FR-2</span>
+    <span class="badge badge-ac">AC-7</span>
+    <span class="badge badge-ac">AC-8</span>
+  </h2>
+
+  <p class="instructions" style="margin-bottom:1rem;">
+    Each field below tests a condition where the suggestion should <strong>not</strong> trigger.
+    Some skip conditions depend on user settings (see AC-8 for persistence).
+  </p>
+
+  <!-- 3-1 Too short -->
+  <div class="test-case">
+    <h3>3-1. Text too short (&lt; 5 chars)</h3>
+    <p class="instructions">Type fewer than 5 characters (e.g. "Hi") and wait.</p>
+    <p class="expected">Expected: NO suggestion (minContextLength = 5).</p>
+    <label for="skip-short">textarea</label>
+    <textarea id="skip-short" data-testid="skip-short" rows="2" cols="50"
+              placeholder="Type 1-4 chars…"></textarea>
+  </div>
+
+  <!-- 3-2 Emoji-only -->
+  <div class="test-case">
+    <h3>3-2. Emoji-only input</h3>
+    <p class="instructions">Type only emoji characters (e.g. "😀🎉🔥🌟💯") and wait.</p>
+    <p class="expected">Expected: NO suggestion (contains no letters/digits).</p>
+    <label for="skip-emoji-only">textarea</label>
+    <textarea id="skip-emoji-only" data-testid="skip-emoji-only" rows="2" cols="50"
+              placeholder="Emoji only…"></textarea>
+  </div>
+
+  <!-- 3-3 URL-only -->
+  <div class="test-case">
+    <h3>3-3. URL-only input</h3>
+    <p class="instructions">Type only a URL (e.g. "https://example.com/path") and wait.</p>
+    <p class="expected">Expected: by default a suggestion MAY appear (<code>skipIfUrlOnly</code>
+      is disabled). If <code>skipIfUrlOnly</code> is enabled in settings, NO suggestion (AC-7).</p>
+    <label for="skip-url-only">textarea</label>
+    <textarea id="skip-url-only" data-testid="skip-url-only" rows="2" cols="50"
+              placeholder="https://…"></textarea>
+  </div>
+
+  <!-- 3-4 Empty / whitespace -->
+  <div class="test-case">
+    <h3>3-4. Empty or whitespace-only</h3>
+    <p class="instructions">Leave empty or type only spaces, then wait.</p>
+    <p class="expected">Expected: NO suggestion.</p>
+    <label for="skip-empty">textarea</label>
+    <textarea id="skip-empty" data-testid="skip-empty" rows="2" cols="50"
+              placeholder="Leave empty or type spaces…"></textarea>
+  </div>
+
+  <!-- 3-5 Settings persistence (AC-8) -->
+  <div class="test-case">
+    <h3>3-5. Settings persistence (AC-8) — manual checklist</h3>
+    <p class="instructions">
+      This scenario requires the Options page and a browser restart:
+      <br>1. Open the extension Options page and change <code>minContextLength</code> or enable
+      <code>skipIfUrlOnly</code>.
+      <br>2. Restart the browser.
+      <br>3. Verify the changed settings are restored and affect suggestion behaviour.
+    </p>
+    <p class="expected">Expected: settings survive browser restart via <code>chrome.storage.local</code> (AC-8).</p>
+  </div>
+</section>
+
+<!-- ========================================================================
+     SECTION 4 – KEYBOARD BEHAVIOR
+     ======================================================================== -->
+<section id="sec-keyboard">
+  <h2>
+    4. Keyboard Behavior
+    <span class="badge badge-must">FR-6</span>
+    <span class="badge badge-ac">AC-4</span>
+    <span class="badge badge-ac">AC-6</span>
+  </h2>
+
+  <p class="instructions" style="margin-bottom:1rem;">
+    These three fields form a tab-order chain. Test that Tab, Shift+Tab, and Esc behave correctly
+    depending on whether a suggestion is visible.
+  </p>
+
+  <div class="test-case">
+    <h3>4-1. Tab with no suggestion → focus moves</h3>
+    <p class="instructions">
+      Click into Field 1, press <kbd>Tab</kbd> → focus should move to Field 2.
+      Press <kbd>Shift+Tab</kbd> → focus back to Field 1.
+    </p>
+    <p class="expected">Expected: normal Tab/Shift+Tab navigation (AC-6).</p>
+    <div class="form-row">
+      <div>
+        <label for="kb-field-1">Field 1 – input[type=text]</label>
+        <input type="text" id="kb-field-1" data-testid="kb-field-1" placeholder="Start here">
+      </div>
+      <div>
+        <label for="kb-field-2">Field 2 – textarea</label>
+        <textarea id="kb-field-2" data-testid="kb-field-2" rows="2" cols="50"
+                  placeholder="Tab lands here"></textarea>
+      </div>
+      <div>
+        <label for="kb-field-3">Field 3 – input[type=text]</label>
+        <input type="text" id="kb-field-3" data-testid="kb-field-3" placeholder="And here">
+      </div>
+    </div>
+  </div>
+
+  <div class="test-case">
+    <h3>4-2. Tab with suggestion → accepts emoji (no focus change)</h3>
+    <p class="instructions">
+      Type ≥5 chars in Field 2, wait for suggestion, then press <kbd>Tab</kbd>.
+      Focus should <strong>stay</strong> in Field 2 and emoji should be inserted.
+    </p>
+    <p class="expected">Expected: Tab inserts emoji; focus remains (FR-6, AC-1).</p>
+  </div>
+
+  <div class="test-case">
+    <h3>4-3. Shift+Tab with suggestion → focus moves (never intercepted)</h3>
+    <p class="instructions">
+      Trigger a suggestion in Field 2, then press <kbd>Shift+Tab</kbd>.
+      Focus should move to Field 1 (suggestion dismissed).
+    </p>
+    <p class="expected">Expected: Shift+Tab always navigates (AC-6).</p>
+  </div>
+
+  <div class="test-case">
+    <h3>4-4. Esc dismisses suggestion</h3>
+    <p class="instructions">
+      Trigger a suggestion in any field, then press <kbd>Esc</kbd>.
+    </p>
+    <p class="expected">Expected: overlay disappears, no emoji inserted (AC-4).</p>
+  </div>
+
+  <div class="test-case">
+    <h3>4-5. Enter in multiline textarea → immediate trigger</h3>
+    <p class="instructions">
+      Type ≥5 chars in the textarea below, then press <kbd>Enter</kbd>.
+    </p>
+    <p class="expected">Expected: newline inserted + suggestion may trigger immediately.</p>
+    <label for="kb-enter-textarea">textarea (multiline)</label>
+    <textarea id="kb-enter-textarea" data-testid="kb-enter-textarea" rows="4" cols="50"
+              placeholder="Type, then Enter…"></textarea>
+  </div>
+</section>
+
+<!-- ========================================================================
+     SECTION 5 – CANCELLATION & COOLDOWN
+     ======================================================================== -->
+<section id="sec-cancel">
+  <h2>
+    5. Cancellation &amp; Cooldown
+    <span class="badge badge-ac">AC-10</span>
+    <span class="badge badge-ac">AC-11</span>
+    <span class="badge badge-ac">AC-12</span>
+  </h2>
+
+  <!-- 5-1 Cancel on edit -->
+  <div class="test-case">
+    <h3>5-1. Cancel on continued editing</h3>
+    <p class="instructions">
+      Type ≥5 chars, and <strong>before</strong> the suggestion appears (~700 ms),
+      type additional characters.
+    </p>
+    <p class="expected">Expected: first suggestion request is cancelled; timer resets (AC-10).</p>
+    <label for="cancel-on-edit">textarea</label>
+    <textarea id="cancel-on-edit" data-testid="cancel-on-edit" rows="3" cols="50"
+              placeholder="Type and keep typing…"></textarea>
+  </div>
+
+  <!-- 5-2 Cancel on focus change -->
+  <div class="test-case">
+    <h3>5-2. Cancel on focus change</h3>
+    <p class="instructions">
+      Type ≥5 chars in textarea A, wait for suggestion, then <strong>click</strong> textarea B.
+    </p>
+    <p class="expected">Expected: overlay on A disappears immediately (AC-10).</p>
+    <label for="cancel-focus-a">Textarea A</label>
+    <textarea id="cancel-focus-a" data-testid="cancel-focus-a" rows="2" cols="50"
+              placeholder="Type here, get suggestion…"></textarea>
+    <label for="cancel-focus-b" style="margin-top:0.5rem;">Textarea B</label>
+    <textarea id="cancel-focus-b" data-testid="cancel-focus-b" rows="2" cols="50"
+              placeholder="Click here to cancel A's suggestion"></textarea>
+  </div>
+
+  <!-- 5-3 Cancel on text selection -->
+  <div class="test-case">
+    <h3>5-3. No suggestion while selecting text</h3>
+    <p class="instructions">
+      Type ≥5 chars, then select some text (Shift+Arrow or mouse drag). Wait for idle.
+    </p>
+    <p class="expected">Expected: NO suggestion while selection is non-collapsed (AC-12).</p>
+    <label for="cancel-on-selection">textarea</label>
+    <textarea id="cancel-on-selection" data-testid="cancel-on-selection" rows="3" cols="50"
+    >Select some of this text using Shift+Arrow keys</textarea>
+  </div>
+
+  <!-- 5-4 Cooldown -->
+  <div class="test-case">
+    <h3>5-4. Cooldown (2 s between suggestion attempts)</h3>
+    <p class="instructions">
+      Trigger a suggestion (accept, dismiss, or let it appear), then immediately
+      type more and wait. Within 2 seconds of the last attempt starting,
+      no new suggestion attempt should occur.
+    </p>
+    <p class="expected">Expected: suggestion suppressed for 2 s since last attempt started (AC-11).</p>
+    <label for="cooldown-test">textarea</label>
+    <textarea id="cooldown-test" data-testid="cooldown-test" rows="3" cols="50"
+              placeholder="Accept, then quickly type more…"></textarea>
+  </div>
+
+  <!-- 5-5 Same-context suppression -->
+  <div class="test-case">
+    <h3>5-5. Same-context suppression</h3>
+    <p class="instructions">
+      Type a sentence, dismiss the suggestion with <kbd>Esc</kbd>, then wait again
+      <strong>without changing the text</strong>.
+    </p>
+    <p class="expected">Expected: same context does not re-trigger (AC-11).</p>
+    <label for="same-context-test">textarea</label>
+    <textarea id="same-context-test" data-testid="same-context-test" rows="3" cols="50"
+              placeholder="Type → Esc → wait → no re-trigger"></textarea>
+  </div>
+
+  <!-- 5-6 Cancel on caret move / click-to-reposition -->
+  <div class="test-case">
+    <h3>5-6. Cancel on caret move (arrow keys / click)</h3>
+    <p class="instructions">
+      Type ≥5 chars, wait for the overlay to appear, then press
+      <kbd>ArrowLeft</kbd> or <kbd>ArrowRight</kbd> to move the caret.
+      Alternatively, <strong>click</strong> inside the same field to reposition the caret.
+    </p>
+    <p class="expected">Expected: overlay disappears immediately; late responses are ignored;
+      no emoji is inserted (AC-10).</p>
+    <label for="cancel-caret-move">textarea</label>
+    <textarea id="cancel-caret-move" data-testid="cancel-caret-move" rows="3" cols="50"
+    >Move the caret with arrow keys or click after suggestion appears</textarea>
+  </div>
+</section>
+
+<!-- ========================================================================
+     SECTION 6 – OVERLAY & TOOLTIP
+     ======================================================================== -->
+<section id="sec-overlay">
+  <h2>
+    6. Overlay &amp; Tooltip
+    <span class="badge badge-must">FR-5</span>
+    <span class="badge badge-ac">AC-9</span>
+    <span class="badge badge-ac">AC-13</span>
+  </h2>
+
+  <!-- 6-1 Ghost text in textarea -->
+  <div class="test-case">
+    <h3>6-1. Ghost emoji in textarea</h3>
+    <p class="instructions">
+      Trigger a suggestion. Observe that the emoji appears as a semi-transparent ghost
+      at the caret position, <strong>without</strong> being inserted into the value.
+    </p>
+    <p class="expected">Expected: ghost emoji at 50% opacity, inline at caret (FR-5).</p>
+    <label for="overlay-textarea">textarea</label>
+    <textarea id="overlay-textarea" data-testid="overlay-textarea" rows="4" cols="50"
+              placeholder="Type ≥5 chars, wait for ghost…"></textarea>
+  </div>
+
+  <!-- 6-2 Ghost text in input -->
+  <div class="test-case">
+    <h3>6-2. Ghost emoji in input[type=text]</h3>
+    <p class="instructions">Same as above, but in an input field.</p>
+    <p class="expected">Expected: ghost emoji inline in input field.</p>
+    <label for="overlay-input">input[type=text]</label>
+    <input type="text" id="overlay-input" data-testid="overlay-input"
+           placeholder="Type ≥5 chars, wait for ghost…" style="width:500px;">
+  </div>
+
+  <!-- 6-3 Tooltip on hover -->
+  <div class="test-case">
+    <h3>6-3. Reason tooltip on hover</h3>
+    <p class="instructions">
+      Trigger a suggestion, then <strong>hover the mouse</strong> over the ghost emoji.
+    </p>
+    <p class="expected">Expected: tooltip shows AI's reason as a short English sentence;
+      tooltip does not steal focus or dismiss overlay (AC-13).</p>
+    <label for="overlay-tooltip">textarea</label>
+    <textarea id="overlay-tooltip" data-testid="overlay-tooltip" rows="3" cols="50"
+              placeholder="Trigger suggestion, then hover the ghost emoji…"></textarea>
+  </div>
+
+  <!-- 6-4 Accessibility / ARIA -->
+  <div class="test-case">
+    <h3>6-4. Accessibility announcement</h3>
+    <p class="instructions">
+      Trigger a suggestion with a screen reader active. Verify that
+      <code>aria-live="polite"</code> announces "Suggested emoji: …".
+    </p>
+    <p class="expected">Expected: screen reader announcement (AC-9). Overlay has role="status".</p>
+    <label for="overlay-aria">textarea</label>
+    <textarea id="overlay-aria" data-testid="overlay-aria" rows="3" cols="50"
+              placeholder="Test with screen reader…"></textarea>
+  </div>
+</section>
+
+<!-- ========================================================================
+     SECTION 7 – IME / COMPOSITION
+     ======================================================================== -->
+<section id="sec-ime">
+  <h2>
+    7. IME / Composition
+    <span class="badge badge-ac">AC-3</span>
+  </h2>
+
+  <p class="instructions" style="margin-bottom:1rem;">
+    Switch to a CJK input method (e.g. Japanese IME). Type text while composing
+    (underlined / uncommitted characters). Verify that <strong>no suggestion appears
+    during composition</strong>. After committing, the idle timer should start.
+  </p>
+
+  <!-- 7-1 IME textarea -->
+  <div class="test-case">
+    <h3>7-1. Japanese IME in textarea</h3>
+    <p class="instructions">
+      IME ON → type "kyouhaiitenki" (compose and convert to a CJK phrase) → confirm with Enter →
+      wait for idle → suggestion may appear.
+    </p>
+    <p class="expected">Expected: NO suggestion while composing; triggers after commit.</p>
+    <label for="ime-textarea">textarea</label>
+    <textarea id="ime-textarea" data-testid="ime-textarea" rows="3" cols="50"
+              placeholder="IME composition test…"></textarea>
+  </div>
+
+  <!-- 7-2 IME input -->
+  <div class="test-case">
+    <h3>7-2. Japanese IME in input</h3>
+    <p class="expected">Expected: same behavior as textarea.</p>
+    <label for="ime-input">input[type=text]</label>
+    <input type="text" id="ime-input" data-testid="ime-input"
+           placeholder="IME composition test…">
+  </div>
+</section>
+
+<!-- ========================================================================
+     SECTION 8 – EDGE CASES
+     ======================================================================== -->
+<section id="sec-edge">
+  <h2>
+    8. Edge Cases
+    <span class="badge badge-must">FR-5</span>
+  </h2>
+
+  <!-- 8-1 RTL -->
+  <div class="test-case">
+    <h3>8-1. RTL layout</h3>
+    <p class="instructions">Type text (≥5 chars) in this RTL-directed field and wait for suggestion.</p>
+    <p class="expected">Expected: ghost overlay respects RTL direction.</p>
+    <label for="edge-rtl">textarea [dir=rtl, lang=ar]</label>
+    <textarea id="edge-rtl" data-testid="edge-rtl" dir="rtl" lang="ar" rows="3" cols="50"
+              placeholder="Type here (RTL layout test)…"
+    >Right to left layout test for overlay positioning</textarea>
+  </div>
+
+  <!-- 8-2 Scrollable textarea -->
+  <div class="test-case">
+    <h3>8-2. Scrollable textarea – overlay stays in sync</h3>
+    <p class="instructions">
+      Place caret in the middle of the long text, trigger suggestion,
+      then <strong>scroll</strong> the textarea up/down.
+    </p>
+    <p class="expected">Expected: ghost follows scroll position.</p>
+    <label for="edge-scroll">textarea (scrollable, 3 rows)</label>
+    <textarea id="edge-scroll" data-testid="edge-scroll" rows="3" cols="50"
+              style="overflow:auto;"
+    >Line 1: The quick brown fox jumps over the lazy dog.
+Line 2: Pack my box with five dozen liquor jugs.
+Line 3: How vexingly quick daft zebras jump.
+Line 4: The five boxing wizards jump quickly.
+Line 5: Bright vixens jump; dozy fowl quack.
+Line 6: Jackdaws love my big sphinx of quartz.
+Line 7: Two driven jocks help fax my big quiz.
+Line 8: The jay, pig, fox, zebra and my wolves quack.
+Line 9: Sympathizing would fix Quaker objectives.
+Line 10: A quivering Texas zombie fought republic linked jewelry.</textarea>
+  </div>
+
+  <!-- 8-3 Resizable textarea -->
+  <div class="test-case">
+    <h3>8-3. Resizable textarea – overlay repositions</h3>
+    <p class="instructions">
+      Trigger a suggestion, then <strong>drag the resize handle</strong>
+      (bottom-right corner) to resize the textarea.
+    </p>
+    <p class="expected">Expected: overlay repositions / resizes with textarea.</p>
+    <label for="edge-resize">textarea (resizable)</label>
+    <textarea id="edge-resize" data-testid="edge-resize" rows="4" cols="50"
+              style="resize:both; overflow:auto;"
+              placeholder="Type, trigger suggestion, then resize…"></textarea>
+  </div>
+
+  <!-- 8-4 Shadow DOM -->
+  <div class="test-case">
+    <h3>8-4. Shadow DOM – input inside shadow root</h3>
+    <p class="instructions">
+      The textarea below lives inside an open Shadow DOM. Type text and verify
+      the extension still detects and suggests.
+    </p>
+    <p class="expected">Exploratory: record whether suggestion works inside Shadow DOM;
+      not required by MVP spec.</p>
+    <label>Shadow DOM host ↓</label>
+    <div id="edge-shadow-host" data-testid="edge-shadow-host"
+         style="border:2px dashed var(--accent); padding:0.75rem; border-radius:6px;"></div>
+    <p class="note">textarea is inside the shadow root of the element above.</p>
+  </div>
+
+  <!-- 8-5 Long text / performance -->
+  <div class="test-case">
+    <h3>8-5. Long text – performance check</h3>
+    <p class="instructions">
+      This textarea is pre-filled with ~1000+ characters. Place the caret somewhere
+      in the middle and trigger a suggestion. Verify no lag or visual glitch.
+    </p>
+    <p class="expected">Expected: no perceptible delay in overlay rendering.</p>
+    <label for="edge-long-text">textarea (pre-filled, long)</label>
+    <textarea id="edge-long-text" data-testid="edge-long-text" rows="6" cols="50"
+              style="overflow:auto;"></textarea>
+  </div>
+
+  <!-- 8-6 Cursor in middle of text -->
+  <div class="test-case">
+    <h3>8-6. Cursor in middle of text</h3>
+    <p class="instructions">
+      Click to place the caret in the <strong>middle</strong> of the sentence
+      (e.g. after "beautiful"), then wait. The suggestion should consider
+      bidirectional context around the cursor (ADR 0007, 0011).
+    </p>
+    <p class="expected">Expected: emoji inserted at caret position, not at end.</p>
+    <label for="edge-cursor-middle">textarea</label>
+    <textarea id="edge-cursor-middle" data-testid="edge-cursor-middle" rows="3" cols="50"
+    >What a beautiful day to go for a walk in the park</textarea>
+    <p class="note">Try placing cursor after "beautiful" and wait for suggestion.</p>
+  </div>
+
+  <!-- 8-7 Styled input (custom fonts/sizes) -->
+  <div class="test-case">
+    <h3>8-7. Custom-styled inputs</h3>
+    <p class="instructions">
+      Verify ghost overlay matches the font/size of each styled input.
+    </p>
+    <p class="expected">Expected: ghost text inherits target's font, size, padding.</p>
+    <label for="edge-styled-large">Large font (24px, serif)</label>
+    <textarea id="edge-styled-large" data-testid="edge-styled-large" rows="2" cols="40"
+              style="font-size:24px; font-family:Georgia,serif; padding:12px;"
+              placeholder="Large serif text…"></textarea>
+    <label for="edge-styled-mono" style="margin-top:0.5rem;">Monospace (14px)</label>
+    <input type="text" id="edge-styled-mono" data-testid="edge-styled-mono"
+           style="font-size:14px; font-family:'Courier New',monospace; padding:8px; width:500px;"
+           placeholder="Monospace input…">
+  </div>
+</section>
+
+<!-- ========================================================================
+     SECTION 9 – DYNAMIC ELEMENTS
+     ======================================================================== -->
+<section id="sec-dynamic">
+  <h2>
+    9. Dynamic Elements
+  </h2>
+
+  <p class="instructions" style="margin-bottom:1rem;">
+    Click the buttons below to dynamically add input fields to the page.
+    Verify that the extension detects and supports these late-added elements.
+  </p>
+
+  <div class="test-case">
+    <h3>9-1. Dynamically added fields</h3>
+    <p class="expected">Exploratory: record whether suggestion works on elements added after
+      page load; not required by MVP spec.</p>
+    <button id="add-textarea-btn" data-testid="add-textarea-btn" type="button">
+      + Add textarea
+    </button>
+    <button id="add-input-btn" data-testid="add-input-btn" type="button">
+      + Add input[type=text]
+    </button>
+    <div id="dynamic-container" data-testid="dynamic-container"></div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+  // ---------- Section 8-4: Shadow DOM setup ----------
+  (function setupShadowDOM() {
+    const host = document.getElementById('edge-shadow-host');
+    if (!host) return;
+    const shadow = host.attachShadow({ mode: 'open' });
+    shadow.innerHTML = `
+      <style>
+        textarea {
+          display: block;
+          width: 100%;
+          max-width: 500px;
+          padding: 0.5rem;
+          font-size: 0.95rem;
+          font-family: system-ui, sans-serif;
+          border: 1px solid #dee2e6;
+          border-radius: 4px;
+          box-sizing: border-box;
+        }
+        textarea:focus {
+          outline: 2px solid #0d6efd;
+          outline-offset: 1px;
+        }
+      </style>
+      <textarea data-testid="edge-shadow-textarea" rows="3" cols="50"
+                placeholder="Type inside Shadow DOM…"></textarea>
+    `;
+  })();
+
+  // ---------- Section 8-5: Pre-fill long text ----------
+  (function prefillLongText() {
+    const el = document.getElementById('edge-long-text');
+    if (!el) return;
+    const sentences = [
+      'The quick brown fox jumps over the lazy dog.',
+      'A journey of a thousand miles begins with a single step.',
+      'To be or not to be, that is the question.',
+      'All that glitters is not gold.',
+      'Where there is a will, there is a way.',
+      'Actions speak louder than words.',
+      'Beauty is in the eye of the beholder.',
+      'Better late than never, but never late is better.',
+      'Curiosity killed the cat, but satisfaction brought it back.',
+      'Do unto others as you would have them do unto you.',
+      'Every cloud has a silver lining.',
+      'Fortune favors the bold.',
+      'Great minds think alike, but fools seldom differ.',
+      'Honesty is the best policy.',
+      'If you cannot beat them, join them.',
+      'Just because you can does not mean you should.',
+      'Knowledge is power, but wisdom is knowing how to use it.',
+      'Laughter is the best medicine.',
+      'Money cannot buy happiness, but it helps.',
+      'Never judge a book by its cover.',
+      'Out of sight, out of mind.',
+      'Practice makes perfect.',
+    ];
+    el.value = sentences.join(' ');
+  })();
+
+  // ---------- Section 9: Dynamic element buttons ----------
+  (function setupDynamicButtons() {
+    let counter = 0;
+    const container = document.getElementById('dynamic-container');
+    const addTextareaBtn = document.getElementById('add-textarea-btn');
+    const addInputBtn = document.getElementById('add-input-btn');
+
+    if (!container || !addTextareaBtn || !addInputBtn) return;
+
+    addTextareaBtn.addEventListener('click', function () {
+      counter++;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'dynamic-item';
+      const label = document.createElement('label');
+      label.textContent = 'Dynamic textarea #' + counter;
+      const textarea = document.createElement('textarea');
+      textarea.setAttribute('data-testid', 'dynamic-textarea-' + counter);
+      textarea.setAttribute('rows', '2');
+      textarea.setAttribute('cols', '50');
+      textarea.setAttribute('placeholder', 'Dynamically added textarea #' + counter);
+      textarea.style.display = 'block';
+      textarea.style.width = '100%';
+      textarea.style.maxWidth = '500px';
+      textarea.style.padding = '0.5rem';
+      textarea.style.fontSize = '0.95rem';
+      textarea.style.fontFamily = 'inherit';
+      textarea.style.border = '1px solid #dee2e6';
+      textarea.style.borderRadius = '4px';
+      textarea.style.boxSizing = 'border-box';
+      wrapper.appendChild(label);
+      wrapper.appendChild(textarea);
+      container.appendChild(wrapper);
+    });
+
+    addInputBtn.addEventListener('click', function () {
+      counter++;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'dynamic-item';
+      const label = document.createElement('label');
+      label.textContent = 'Dynamic input #' + counter;
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.setAttribute('data-testid', 'dynamic-input-' + counter);
+      input.setAttribute('placeholder', 'Dynamically added input #' + counter);
+      input.style.display = 'block';
+      input.style.width = '100%';
+      input.style.maxWidth = '500px';
+      input.style.padding = '0.5rem';
+      input.style.fontSize = '0.95rem';
+      input.style.fontFamily = 'inherit';
+      input.style.border = '1px solid #dee2e6';
+      input.style.borderRadius = '4px';
+      input.style.boxSizing = 'border-box';
+      wrapper.appendChild(label);
+      wrapper.appendChild(input);
+      container.appendChild(wrapper);
+    });
+  })();
+
+  // ---------- Smooth scroll for TOC ----------
+  document.querySelectorAll('nav a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+
+</body>
+</html>

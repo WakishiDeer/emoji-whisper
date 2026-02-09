@@ -18,7 +18,8 @@ We considered using Cypress for E2E testing, but Playwright offers better suppor
 
 ## Consequences
 
-* The project includes `tests/unit/` for unit tests and will include `tests/e2e/` for Playwright tests. When E2E tests are added, a `playwright.config.ts` file should configure the browser to load the built extension and run tests serially.
+* The project includes `tests/unit/` for unit tests and `tests/e2e/` for Playwright tests. A `playwright.config.ts` file should configure the browser to load the built extension and run tests serially.
+* A comprehensive test fixture page (`tests/e2e/fixtures/test-site.html`) provides all input types, edge cases and scenarios needed for both manual verification and automated E2E tests. All testable elements carry `data-testid` attributes for stable Playwright selectors. Serve the fixture locally (e.g. `npx serve tests/e2e/fixtures`) and navigate to it after loading the unpacked extension.
 * The CI pipeline will run unit tests before E2E tests.  Breaking changes to the core logic will fail fast.
 * Developers must mock the Prompt API in unit and integration tests since the API is only available in a real Chrome environment. Prefer mocking via core ports (e.g., `SuggestionGenerator`, `AvailabilityChecker`) rather than relying on global browser objects.
 * E2E tests will run only on machines where Chrome 138+ is installed and built‑in AI is enabled.
