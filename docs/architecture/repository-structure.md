@@ -17,7 +17,7 @@ This document is the single source of truth for this repository’s intended lay
 ## ASCII Tree
 
 ```text
-emoji-completion/
+emoji-whisper/
 ├─ eslint.config.mjs
 ├─ package.json
 ├─ pnpm-lock.yaml

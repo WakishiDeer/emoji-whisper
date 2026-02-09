@@ -1,6 +1,6 @@
 # Glossary
 
-This document defines the ubiquitous language used throughout the Emoji Suggestion Extension project. Consistent use of these terms across specifications, design documents and code prevents miscommunication.
+This document defines the ubiquitous language used throughout the Emoji Whisper project. Consistent use of these terms across specifications, design documents and code prevents miscommunication.
 
 ## Core Domain Terms
 

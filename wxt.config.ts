@@ -13,7 +13,9 @@ export default defineConfig({
     },
   }),
   manifest: {
-    permissions: ['storage', 'activeTab'],
+    name: 'Emoji Whisper',
+    description: 'Suggests a single emoji based on your input using on-device AI',
+    permissions: [],
     web_accessible_resources: [
       {
         resources: ['content-scripts/*'],

@@ -1,6 +1,6 @@
 # Functional Requirements
 
-This document lists the functional requirements for the initial release of the Emoji Suggestion Extension. Requirements marked **MUST** are mandatory for the minimal viable product (MVP). Items marked **SHOULD** or **COULD** may be addressed in later iterations.
+This document lists the functional requirements for the initial release of Emoji Whisper. Requirements marked **MUST** are mandatory for the minimal viable product (MVP). Items marked **SHOULD** or **COULD** may be addressed in later iterations.
 
 ## Primary workflow
 

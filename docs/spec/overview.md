@@ -1,6 +1,6 @@
 # Overview
 
-This document introduces the **Emoji Suggestion Extension**—a Chrome- and Edge-based (Chromium) browser extension that proposes a single context-appropriate emoji for the text you are currently writing. The extension is designed for power-users who want to enhance the tone of their messages without breaking their typing flow.
+This document introduces **Emoji Whisper**—a Chrome- and Edge-based (Chromium) browser extension that proposes a single context-appropriate emoji for the text you are currently writing. The extension is designed for power-users who want to enhance the tone of their messages without breaking their typing flow.
 
 ## Purpose
 

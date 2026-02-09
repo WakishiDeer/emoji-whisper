@@ -1,7 +1,8 @@
 {
-  "name": "emoji-completion",
+  "name": "emoji-whisper",
+  "displayName": "Emoji Whisper",
   "version": "0.0.1",
-  "description": "",
+  "description": "Suggests a single emoji based on your input using on-device AI",
   "main": "index.js",
   "scripts": {
     "postinstall": "wxt prepare",

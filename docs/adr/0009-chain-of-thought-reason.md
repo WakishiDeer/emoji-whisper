@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-The emoji suggestion extension uses a direct prompt that asks the model to output a single emoji character. While simple, this approach limits inference quality — the model must produce a final answer without any intermediate reasoning step. For ambiguous inputs (e.g., "fire" could mean anger, excitement, or a literal fire), the model has no mechanism to disambiguate before committing to an emoji.
+The Emoji Whisper extension uses a direct prompt that asks the model to output a single emoji character. While simple, this approach limits inference quality — the model must produce a final answer without any intermediate reasoning step. For ambiguous inputs (e.g., "fire" could mean anger, excitement, or a literal fire), the model has no mechanism to disambiguate before committing to an emoji.
 
 Chain-of-Thought (CoT) prompting is a well-established technique where the model is asked to articulate its reasoning before producing the final answer. Research shows this improves accuracy by 10–25% on interpretive tasks, because:
 
