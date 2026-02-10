@@ -6,6 +6,10 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [Unreleased]
 
+- Added LICENSE (MIT) and README.md for public release.
+- Updated `package.json` metadata: set `version` to `0.1.0`, added `author`, `repository`, `homepage`, `bugs`, `keywords`, `private: true`; changed `license` to `MIT`; removed unused `main` field.
+- Added `.vscode/mcp.json` to `.gitignore`.
+- Removed unused `copilot-setup-steps.yml` workflow.
 - Narrowed supported languages to English and Japanese only (`['en', 'ja']`); removed Spanish (`'es'`) from `expectedInputs`, `LanguageModelExpectedIO` type, and `outputLanguage` type.
 - Added `vitest.config.ts` to scope Vitest to `tests/unit/**/*.test.ts` only, preventing Vitest from loading Playwright E2E spec files.
 - Added full E2E test coverage for AC-2 through AC-13: ai-availability (5 tests), ime-composition (2), keyboard-behavior (5), unsupported-inputs (7), skip-conditions (5), accessibility (2), cancellation (5), cooldown (3), tooltip (3). Total: 43 Playwright E2E tests passing across 11 spec files.

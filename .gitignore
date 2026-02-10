@@ -151,3 +151,6 @@ web-ext.config.ts
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# VS Code local-only config
+.vscode/mcp.json
