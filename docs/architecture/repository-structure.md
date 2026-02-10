@@ -25,7 +25,9 @@ emoji-whisper/
 ├─ tsconfig.json
 ├─ tsconfig.eslint.json
 ├─ web-ext.config.ts
+├─ vitest.config.ts                    # Vitest unit-test configuration (scoped to tests/unit/)
 ├─ wxt.config.ts
+├─ playwright.config.ts               # Playwright E2E test configuration
 ├─ tests/
 │  ├─ unit/
 │  │  ├─ context-service.test.ts
@@ -42,6 +44,20 @@ emoji-whisper/
 │  │  ├─ throttle.test.ts
 │  │  └─ user-preferences.test.ts
 │  └─ e2e/
+│     ├─ helpers/
+│     │  ├─ extension-fixture.ts    # Custom fixture: persistent context + extension
+│     │  └─ mock-language-model.ts  # Configurable LanguageModel mock + selectors
+│     ├─ seed.spec.ts               # Seed test: extension loads + mock works
+│     ├─ suggestion-flow.spec.ts    # AC-1: basic suggestion flow
+│     ├─ ai-availability.spec.ts    # AC-2: AI unavailability & graceful failure
+│     ├─ ime-composition.spec.ts    # AC-3: IME composition handling
+│     ├─ keyboard-behavior.spec.ts  # AC-4/AC-6: Esc, Tab, Shift+Tab behavior
+│     ├─ unsupported-inputs.spec.ts # AC-5: non-supported input types
+│     ├─ skip-conditions.spec.ts    # AC-7: skip rules (short, emoji-only, etc.)
+│     ├─ accessibility.spec.ts      # AC-9: ARIA attributes
+│     ├─ cancellation.spec.ts       # AC-10/AC-12: cancellation & selection
+│     ├─ cooldown.spec.ts           # AC-11: cooldown & same-context suppression
+│     ├─ tooltip.spec.ts            # AC-13: reason tooltip on hover
 │     └─ fixtures/
 │        └─ test-site.html          # Comprehensive manual/E2E test page
 ├─ .output/                         # WXT build output (generated)

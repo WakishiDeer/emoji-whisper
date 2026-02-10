@@ -8,6 +8,8 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 - Narrowed supported languages to English and Japanese only (`['en', 'ja']`); removed Spanish (`'es'`) from `expectedInputs`, `LanguageModelExpectedIO` type, and `outputLanguage` type.
 - Added `vitest.config.ts` to scope Vitest to `tests/unit/**/*.test.ts` only, preventing Vitest from loading Playwright E2E spec files.
+- Added full E2E test coverage for AC-2 through AC-13: ai-availability (5 tests), ime-composition (2), keyboard-behavior (5), unsupported-inputs (7), skip-conditions (5), accessibility (2), cancellation (5), cooldown (3), tooltip (3). Total: 43 Playwright E2E tests passing across 11 spec files.
+- Added Playwright E2E test infrastructure: `playwright.config.ts`, custom extension fixture (`tests/e2e/helpers/extension-fixture.ts`) that launches persistent Chromium with the sideloaded extension, configurable LanguageModel mock (`tests/e2e/helpers/mock-language-model.ts`) with timing/selector constants, seed test, and AC-1 suggestion flow tests. Added `test:e2e`, `test:e2e:ui`, `test:e2e:headed` npm scripts.
 - Added comprehensive test site (`tests/e2e/fixtures/test-site.html`) covering all functional requirements (FR-1–FR-10) and acceptance criteria (AC-1–AC-13). Includes 9 sections: basic suggestion flow (incl. AI unavailability/failure per AC-2, FR-3, FR-7), unsupported input types, skip conditions (incl. AC-8 settings-persistence checklist), keyboard behavior, cancellation & cooldown (incl. caret-move cancellation per AC-10), overlay & tooltip, IME composition, edge cases (RTL, scroll, resize, Shadow DOM, long text, cursor-middle, custom styles), and dynamic elements. Fixed URL-only skip wording to match default preferences; replaced non-English fixture strings with English equivalents; marked Shadow DOM and dynamic-element cases as exploratory. All elements carry `data-testid` attributes for future Playwright E2E tests.
 - Updated docs (ADR 0004, workflow-tdd, wxt-development-guidelines) to reference the E2E test fixture page and describe manual testing workflow.
 - Renamed extension from "Emoji Completion" to "Emoji Whisper"; updated package name to `emoji-whisper`, manifest display name, and all documentation references.
@@ -31,7 +33,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 - Reorganised few-shot examples into "end-of-text" and "mid-text with [CURSOR]" sections for clarity.
 - Lowered default `temperature` from 0.7 to 0.6 for more deterministic, context-accurate suggestions.
 - Strengthened sentence-mode user suffix to instruct the model to "Analyze the words before and after [CURSOR] carefully".
-- Expanded `expectedInputs.languages` in Prompt API adapter from `['en']` to `['en', 'ja', 'es']` to improve multilingual input handling.
+- Expanded `expectedInputs.languages` in Prompt API adapter from `['en']` to `['en', 'ja']` to improve multilingual input handling.
 - Added ADR 0011: Cursor-position-aware prompt tuning.
 
 - Added ADR 0010: Inline Mirror Overlay — replace absolute-positioned ghost div with a mirror overlay that renders the emoji inline with text flow, preventing overlay from covering existing text.
