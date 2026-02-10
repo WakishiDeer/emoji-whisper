@@ -125,6 +125,7 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+.vscode/mcp.json
 
 # yarn v3
 .pnp.*
@@ -143,3 +144,10 @@ vite.config.ts.timestamp-*
 # web-ext.config.ts
 web-ext.config.ts
 .wxt/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
