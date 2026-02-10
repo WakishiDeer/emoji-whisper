@@ -13,7 +13,7 @@ export type PromptConfig = Readonly<{
    * Some LanguageModel API implementations require specifying an output language.
    * Keep values constrained for predictable behavior.
    */
-  outputLanguage?: 'en' | 'es' | 'ja';
+  outputLanguage?: 'en' | 'ja';
 }>;
 
 // ---------------------------------------------------------------------------

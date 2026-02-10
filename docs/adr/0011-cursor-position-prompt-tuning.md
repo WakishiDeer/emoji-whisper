@@ -114,7 +114,7 @@ The added instruction reinforces proximity-weighted analysis at inference time.
 
 ### 5. Expanded `expectedInputs` languages
 
-`buildLanguageModelOptions()` in `prompt-api.ts` now passes `languages: ['en', 'ja', 'es']` for `expectedInputs` (previously `['en']` only). This signals to Chrome's LanguageModel that input text may be multilingual, potentially improving tokenisation and attention for non-English user text.
+`buildLanguageModelOptions()` in `prompt-api.ts` now passes `languages: ['en', 'ja']` for `expectedInputs` (previously `['en']` only). This signals to Chrome's LanguageModel that input text may be multilingual, potentially improving tokenisation and attention for non-English user text.
 
 ### 6. Narrowed default sentence context to cursor sentence only
 
@@ -134,7 +134,7 @@ With these defaults, `extractContextAroundCursor()` returns only the **partial s
 
 - **Stronger cursor-position signal.** The model receives rules, examples, and a reinforced suffix — three layers of guidance for `[CURSOR]` interpretation.
 - **CoT quality boost.** Forcing the reason to cite before/after context improves reasoning chain quality and makes suggestions more transparent.
-- **Multilingual robustness.** Expanded `expectedInputs` removes a potential quality bottleneck for Japanese and Spanish inputs.
+- **Multilingual robustness.** Expanded `expectedInputs` removes a potential quality bottleneck for Japanese inputs.
 - **Backward compatible.** No API, port, or type changes. All modifications are in prompt text and sampling defaults.
 
 ### Negative

@@ -48,7 +48,7 @@ function isLanguageModelStatic(value: unknown): value is LanguageModelStatic {
 
 type LanguageModelExpectedIO = {
   type: 'text';
-  languages?: Array<'en' | 'es' | 'ja'>;
+  languages?: Array<'en' | 'ja'>;
 };
 
 function buildLanguageModelOptions(config: PromptConfig): {
@@ -57,7 +57,7 @@ function buildLanguageModelOptions(config: PromptConfig): {
   outputLanguage: NonNullable<PromptConfig['outputLanguage']>;
 } {
   // Prompts are authored in English but user text may be in other languages.
-  const expectedInputs: LanguageModelExpectedIO[] = [{ type: 'text', languages: ['en', 'ja', 'es'] }];
+  const expectedInputs: LanguageModelExpectedIO[] = [{ type: 'text', languages: ['en', 'ja'] }];
 
   // Constrain outputs if requested; default to English.
   const outputLanguage = config.outputLanguage ?? 'en';

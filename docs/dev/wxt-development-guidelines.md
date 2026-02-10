@@ -51,7 +51,7 @@ Quick AI availability check (run in page console):
 
 ```js
 globalThis.LanguageModel?.availability?.({
-  expectedInputs: [{ type: 'text', languages: ['en'] }],
+  expectedInputs: [{ type: 'text', languages: ['en', 'ja'] }],
   expectedOutputs: [{ type: 'text', languages: ['en'] }],
   outputLanguage: 'en',
 }).then(console.log);
