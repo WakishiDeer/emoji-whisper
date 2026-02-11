@@ -7,29 +7,23 @@
  * - Link to full Options page
  */
 
-import React, { useCallback } from 'react';
-import type { PresetMode } from '../../core/domain/preferences/preset-mode';
-import { getPresetValues } from '../../core/domain/preferences/preset-mode';
-import { usePreferences } from './usePreferences';
-import { PresetSelector } from './PresetSelector';
-import { browser } from 'wxt/browser';
-import './popup.css';
+import React, { useCallback } from "react";
+import type { PresetMode } from "../../core/domain/preferences/preset-mode";
+import { usePreferences } from "./usePreferences";
+import { PresetSelector } from "./PresetSelector";
+import { browser } from "wxt/browser";
+import "./popup.css";
 
 export function PopupApp() {
   const { prefs, loading, saving, error, update } = usePreferences();
 
   const handleToggle = useCallback(() => {
-    void update({ ...prefs, enabled: !prefs.enabled });
+    void update(prefs.withEnabled(!prefs.enabled));
   }, [prefs, update]);
 
   const handlePresetChange = useCallback(
     (mode: PresetMode) => {
-      const presetValues = getPresetValues(mode);
-      if (presetValues) {
-        void update({ ...prefs, ...presetValues, presetMode: mode });
-      } else {
-        void update({ ...prefs, presetMode: mode });
-      }
+      void update(prefs.applyPreset(mode));
     },
     [prefs, update],
   );
@@ -48,7 +42,11 @@ export function PopupApp() {
         <h1>Emoji Whisper</h1>
       </header>
 
-      {error && <p className="popup-error" role="alert">{error}</p>}
+      {error && (
+        <p className="popup-error" role="alert">
+          {error}
+        </p>
+      )}
 
       <div className="popup-toggle">
         <label className="toggle-label">
@@ -58,7 +56,7 @@ export function PopupApp() {
             onChange={handleToggle}
             disabled={saving}
           />
-          <span>{prefs.enabled ? 'Enabled' : 'Disabled'}</span>
+          <span>{prefs.enabled ? "Enabled" : "Disabled"}</span>
         </label>
       </div>
 
