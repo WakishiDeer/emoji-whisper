@@ -167,4 +167,85 @@ describe('createUserPreferences', () => {
       }),
     ).not.toThrow();
   });
+
+  // --- topK validation ---
+
+  it('rejects topK < 1', () => {
+    expect(() =>
+      createUserPreferences({ ...DEFAULT_USER_PREFERENCES, topK: 0 }),
+    ).toThrow('topK must be between 1 and 40');
+  });
+
+  it('rejects topK > 40', () => {
+    expect(() =>
+      createUserPreferences({ ...DEFAULT_USER_PREFERENCES, topK: 41 }),
+    ).toThrow('topK must be between 1 and 40');
+  });
+
+  it('rejects non-integer topK', () => {
+    expect(() =>
+      createUserPreferences({ ...DEFAULT_USER_PREFERENCES, topK: 3.5 }),
+    ).toThrow('topK must be an integer');
+  });
+
+  it('accepts topK at boundaries', () => {
+    expect(() =>
+      createUserPreferences({ ...DEFAULT_USER_PREFERENCES, topK: 1 }),
+    ).not.toThrow();
+    expect(() =>
+      createUserPreferences({ ...DEFAULT_USER_PREFERENCES, topK: 40 }),
+    ).not.toThrow();
+  });
+
+  // --- temperature validation ---
+
+  it('rejects temperature < 0', () => {
+    expect(() =>
+      createUserPreferences({ ...DEFAULT_USER_PREFERENCES, temperature: -0.1 }),
+    ).toThrow('temperature must be between 0.0 and 2.0');
+  });
+
+  it('rejects temperature > 2.0', () => {
+    expect(() =>
+      createUserPreferences({ ...DEFAULT_USER_PREFERENCES, temperature: 2.1 }),
+    ).toThrow('temperature must be between 0.0 and 2.0');
+  });
+
+  it('accepts temperature at boundaries', () => {
+    expect(() =>
+      createUserPreferences({ ...DEFAULT_USER_PREFERENCES, temperature: 0 }),
+    ).not.toThrow();
+    expect(() =>
+      createUserPreferences({ ...DEFAULT_USER_PREFERENCES, temperature: 2.0 }),
+    ).not.toThrow();
+  });
+
+  // --- presetMode validation ---
+
+  it('rejects invalid presetMode', () => {
+    expect(() =>
+      createUserPreferences({
+        ...DEFAULT_USER_PREFERENCES,
+        presetMode: 'invalid' as 'balanced',
+      }),
+    ).toThrow('Invalid presetMode');
+  });
+
+  it('accepts all valid preset modes', () => {
+    for (const mode of ['simple', 'balanced', 'creative', 'custom'] as const) {
+      expect(() =>
+        createUserPreferences({ ...DEFAULT_USER_PREFERENCES, presetMode: mode }),
+      ).not.toThrow();
+    }
+  });
+
+  // --- display settings ---
+
+  it('preserves display settings in defaults', () => {
+    const prefs = createUserPreferences(DEFAULT_USER_PREFERENCES);
+    expect(prefs.display).toEqual({
+      showUnavailableToast: true,
+      showReasonTooltip: true,
+    });
+  });
 });
