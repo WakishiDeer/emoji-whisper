@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
 ## [Unreleased]
+- Accepted ADR 0014: Domain Type Construction Validation — adopted S4 (targeted class refactoring for `UserPreferences` only). `UserPreferences` will become a class with `private constructor`, `static create()`, immutable `with*()` update methods, and `toJSON()`/`fromJSON()` serialization. Nested types remain plain `Readonly<{}>`, validated at the aggregate boundary. S3 (full class refactoring) deferred to follow-up PRs based on implementation experience.
 
 - Updated ADR 0013: added 3-layer message validation protocol (envelope guard → structure guard → domain validation) for `window.postMessage` payloads received by `SettingsReceiver`.
 - Added ADR 0013: Settings Bridge Architecture — ISOLATED-world content script bridge + `window.postMessage` to deliver stored `UserPreferences` to the MAIN-world content script; adopts WXT Storage API (`storage.defineItem`) for type-safe, cross-browser storage with built-in `.watch()` and migration support. Includes background service worker for diagnostics and future lifecycle management.

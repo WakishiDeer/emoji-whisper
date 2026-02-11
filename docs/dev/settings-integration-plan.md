@@ -110,7 +110,7 @@ All steps follow the TDD workflow defined in `docs/dev/workflow-tdd.md`: write f
 ### Step 4.5 — Shared WXT storage item definition
 
 - [ ] Create `src/extension/adapters/storage-items.ts`
-  - `storage.defineItem<UserPreferences>('local:userPreferences', { fallback: DEFAULT_USER_PREFERENCES })`
+  - `storage.defineItem<UserPreferencesInput>('local:userPreferences', { fallback: UserPreferences.createDefault().toJSON() })`
   - Single source of truth imported by `StorageAdapter`, bridge, background, and settings UI
 - [ ] Refactor `StorageAdapter` to use `prefsItem.getValue()` / `prefsItem.setValue()` instead of raw `browser.storage.local`
 - [ ] Refactor `usePreferences` hook to use `prefsItem` directly (removing `StorageAdapter` dependency in UI)
@@ -131,7 +131,7 @@ All steps follow the TDD workflow defined in `docs/dev/workflow-tdd.md`: write f
   - Applies 3-layer validation protocol (see ADR 0013):
     1. **Envelope guard**: `event.data?.type === 'EMOJI_WHISPER_SETTINGS'` — silently ignore unrelated messages
     2. **Structure guard**: verify `payload` is a non-null object with expected top-level keys — log warning and drop on failure
-    3. **Domain validation**: `createUserPreferences(payload)` — log error and drop on failure
+    3. **Domain validation**: `UserPreferences.fromJSON(payload)` (ADR 0014) — log error and drop on failure
   - Implements `SettingsProvider` port
 - [ ] Write unit tests: valid message, envelope rejection, structural rejection, domain rejection, callback invocation, unsubscribe
 - [ ] Update `docs/architecture/repository-structure.md`
