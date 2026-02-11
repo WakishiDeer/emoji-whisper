@@ -6,6 +6,28 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [Unreleased]
 
+- Implemented React-based Settings page (Options page + Popup) per ADR 0012 / FR-8 / FR-11.
+  - Added React 19, ReactDOM 19, `@wxt-dev/module-react` dependencies.
+  - Created `PresetMode` value object (`simple`/`balanced`/`creative`/`custom`) with predefined AI-tuning, context, and skip values.
+  - Created `DisplaySettings` value object (`showUnavailableToast`, `showReasonTooltip`).
+  - Extended `UserPreferences` aggregate with `presetMode`, `topK`, `temperature`, `display` fields and validation.
+  - Implemented `StorageAdapter` (`PreferencesRepository` via `chrome.storage.local`) with schema-migration merge and validation.
+  - Added Options page entrypoint (`src/entrypoints/options/`) with full settings form, preset selector, and reset-to-defaults button.
+  - Added Popup entrypoint (`src/entrypoints/popup/`) with enable/disable toggle, preset mode selector, and link to full Options page.
+  - Created shared React components: `PresetSelector`, `SettingsForm`, `OptionsApp`, `PopupApp`, `usePreferences` hook.
+  - Added `storage` permission and `jsx: react-jsx` TypeScript compiler option.
+  - Added unit tests for `PresetMode`, `DisplaySettings`, extended `UserPreferences` validation, and `StorageAdapter` (47 new test cases, 193 total passing).
+- Added ADR 0012: React-based settings page — adopt React for Options page and Popup entrypoints, with `@wxt-dev/module-react` integration.
+- Updated FR-8: added Preset Modes subsection (Simple, Balanced, Creative, Custom) that batch-apply settings; `topK` and `temperature` to be promoted from `PromptConfig` static defaults to user-configurable fields in `UserPreferences`.
+- Added FR-11: Popup UI — browser action popup with enable/disable toggle, preset mode selector, and link to full Options page.
+- Added AC-14 (Options page renders all settings), AC-15 (Preset mode batch apply), AC-16 (Custom mode on manual change), AC-17 (Popup quick controls), AC-18 (Reset to defaults), AC-19 (Settings validation feedback).
+- Updated glossary: added Options Page, Popup, PresetMode, temperature definitions.
+- Updated repository structure: added `src/entrypoints/options/`, `src/entrypoints/popup/`, `src/extension/settings-ui/`, `src/extension/adapters/storage-adapter.ts`, `src/core/domain/preferences/preset-mode.ts`.
+- Updated FR-8: added Display settings subsection (`showUnavailableToast`, `showReasonTooltip`) for toggling toast notifications and reason tooltip, independent of preset modes.
+- Updated ADR 0012: added `DisplaySettings` value object to domain model extension (§3) and infrastructure file list (§4).
+- Added AC-20 (Disabling unavailability toast), AC-21 (Disabling reason tooltip).
+- Updated glossary: added DisplaySettings, showUnavailableToast, showReasonTooltip definitions.
+- Updated repository structure: added `src/core/domain/preferences/display-settings.ts`.
 - Added LICENSE (MIT) and README.md for public release.
 - Updated `package.json` metadata: set `version` to `0.1.0`, added `author`, `repository`, `homepage`, `bugs`, `keywords`, `private: true`; changed `license` to `MIT`; removed unused `main` field.
 - Added `.vscode/mcp.json` to `.gitignore`.
