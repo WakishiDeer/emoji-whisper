@@ -50,9 +50,25 @@ This document lists the functional requirements for the initial release of Emoji
      - `skipIfEmpty` (default: true) – Skip if input is empty or whitespace only.
      - `skipIfEmojiOnly` (default: true) – Skip if input contains only emoji.
      - `skipIfUrlOnly` (default: false) – Optionally skip if input appears to be a URL.
-   * **Clear preferences** – Reset all settings to defaults.
+   * **Display settings** – Configure UI notification behaviour. These settings are independent of preset modes and persist across preset changes:
+     - `showUnavailableToast` (default: true) – When true, displays a toast notification when the Prompt API is unavailable or the AI model is downloading. When false, the toast is suppressed entirely.
+     - `showReasonTooltip` (default: true) – When true, displays a tooltip with the model's reasoning when the user hovers over the ghost emoji overlay. When false, the tooltip is suppressed.
+   * **Preset modes** – The options page MUST provide a preset mode selector with the following modes (see ADR 0012):
+     - `Simple` – Conservative settings with minimal context, all skip conditions enabled, and low AI diversity (`contextMode: 'characters'`, `maxContextLength: 100`, `skipIfEmpty: true`, `skipIfEmojiOnly: true`, `skipIfUrlOnly: true`, `topK: 3`, `temperature: 0.5`).
+     - `Balanced` – The current FR-8 defaults (`contextMode: 'sentences'`, `beforeSentenceCount: 2`, `afterSentenceCount: 1`, `topK: 8`, `temperature: 0.7`).
+     - `Creative` – Wider context window and higher AI diversity for more varied suggestions (`contextMode: 'sentences'`, `beforeSentenceCount: 3`, `afterSentenceCount: 2`, `topK: 15`, `temperature: 1.2`).
+     - `Custom` – All individual settings are user-configured; no preset override is applied.
+     
+     Selecting a preset MUST update all individual settings to the preset's predefined values. If the user manually changes any individual setting while a named preset is active, the mode MUST automatically transition to Custom. The selected mode MUST be persisted alongside other preferences.
+   * **Clear preferences** – Reset all settings to defaults (reverts to Balanced preset).
 9. **Persistent preferences (SHOULD).** The extension SHOULD save user preferences using `chrome.storage.local` so that settings persist across sessions. Preferences MUST never include any user text or AI prompt data.
 10. **Hot-reload during development (COULD).** During development, the project COULD support hot module reloading for content scripts via WXT, to improve developer experience. This is not required in the production build.
+11. **Popup UI (SHOULD).** The extension SHOULD provide a browser action popup (opened by clicking the extension icon) with the following controls (see ADR 0012):
+    * **Enable/Disable toggle** – Immediately toggles emoji suggestion functionality on or off.
+    * **Preset mode selector** – Displays the current preset mode and allows quick switching between Simple, Balanced, Creative, and Custom modes.
+    * **Open full settings link** – A link/button that opens the full Options page via `chrome.runtime.openOptionsPage()`.
+
+    Changes made in the popup MUST take effect immediately and MUST be persisted to `chrome.storage.local`.
 
 ## Out-of-scope for MVP
 * Multi-candidate suggestions or suggestion cycling.

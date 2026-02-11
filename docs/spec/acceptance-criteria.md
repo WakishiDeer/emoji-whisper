@@ -95,3 +95,70 @@ The following acceptance criteria translate the functional requirements into con
 *And* hovering MUST not dismiss the suggestion overlay
 *And* hovering MUST not steal focus from the input field
 *And* moving the mouse away from the overlay MUST hide the tooltip.
+
+## AC‑14: Options page renders all settings
+
+*Given* the user opens the Options page (via `chrome.runtime.openOptionsPage()` or right-click → Options)
+*Then* all configurable preferences MUST be displayed with their current persisted values:
+  enable/disable toggle, accept key, topK, temperature, context extraction settings
+  (contextMode, minContextLength, maxContextLength, adjustToBoundary, beforeSentenceCount,
+  afterSentenceCount, cursorMarker), skip conditions (skipIfEmpty, skipIfEmojiOnly, skipIfUrlOnly),
+  display settings (showUnavailableToast, showReasonTooltip), and the preset mode selector.
+*And* each setting MUST be editable via appropriate form controls (toggles, sliders, dropdowns, text inputs).
+
+## AC‑15: Preset mode applies batch settings
+
+*Given* the user opens the Options page (or Popup) and the current mode is "Balanced"
+*When* the user selects the "Simple" preset
+*Then* all individual settings MUST be updated to Simple's predefined values
+*And* the changes MUST be persisted to `chrome.storage.local`
+*And* the new settings MUST affect suggestion triggering behaviour immediately.
+
+## AC‑16: Custom mode on manual change
+
+*Given* the user is in the "Balanced" preset mode
+*When* the user manually changes any individual setting (e.g. changes `topK` from 8 to 12)
+*Then* the preset mode label MUST automatically switch to "Custom"
+*And* the manually changed value MUST be persisted.
+
+## AC‑17: Popup quick controls
+
+*Given* the user clicks the extension icon in the browser toolbar
+*Then* a popup MUST appear showing:
+  an enable/disable toggle reflecting the current state,
+  the current preset mode with a selector to switch modes,
+  and a link/button to open the full Options page.
+*And* changes made in the popup MUST take effect immediately
+*And* changes MUST be persisted to `chrome.storage.local`.
+
+## AC‑18: Reset to defaults
+
+*Given* the user is on the Options page with modified settings
+*When* the user clicks "Reset to defaults"
+*Then* all settings MUST revert to `DEFAULT_USER_PREFERENCES` values (Balanced preset)
+*And* the preset mode MUST switch to "Balanced"
+*And* the change MUST be persisted to `chrome.storage.local`.
+
+## AC‑19: Settings validation feedback
+
+*Given* the user is on the Options page
+*When* the user enters an invalid value (e.g. `topK = 50`, `temperature = 3.0`, or `minContextLength = -1`)
+*Then* the Options page MUST display an inline validation error message near the invalid field
+*And* the invalid value MUST NOT be persisted to `chrome.storage.local`
+*And* other valid fields MUST remain unaffected.
+
+## AC‑20: Disabling unavailability toast
+
+*Given* the user has set `showUnavailableToast` to false in the Options page
+*When* the built-in AI is not available and the user pauses typing (idle) in a supported text field
+*Then* the extension MUST NOT display the unavailability toast notification
+*And* the extension MUST still skip the Prompt API call (suggestion is not attempted)
+*And* if the user later re-enables `showUnavailableToast`, the toast MUST appear again on the next unavailability event.
+
+## AC‑21: Disabling reason tooltip
+
+*Given* the user has set `showReasonTooltip` to false in the Options page and an emoji suggestion overlay is visible
+*When* the user hovers the mouse over the ghost emoji overlay
+*Then* no reason tooltip MUST appear
+*And* the suggestion overlay MUST remain visible and functional (Tab to accept, Esc to dismiss)
+*And* if the user later re-enables `showReasonTooltip`, the tooltip MUST appear on subsequent suggestions.

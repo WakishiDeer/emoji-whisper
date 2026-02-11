@@ -44,7 +44,10 @@ emoji-whisper/
 │  │  ├─ suggestion-parser.test.ts
 │  │  ├─ suggestion-session.test.ts
 │  │  ├─ throttle.test.ts
-│  │  └─ user-preferences.test.ts
+│  │  ├─ user-preferences.test.ts
+│  │  ├─ preset-mode.test.ts
+│  │  ├─ display-settings.test.ts
+│  │  └─ storage-adapter.test.ts
 │  └─ e2e/
 │     ├─ helpers/
 │     │  ├─ extension-fixture.ts    # Custom fixture: persistent context + extension
@@ -81,7 +84,8 @@ emoji-whisper/
 │  │  ├─ 0008-prompt-and-sampling-tuning.md
 │  │  ├─ 0009-chain-of-thought-reason.md
 │  │  ├─ 0010-inline-mirror-overlay.md
-│  │  └─ 0011-cursor-position-prompt-tuning.md
+   │  ├─ 0011-cursor-position-prompt-tuning.md
+   │  └─ 0012-react-settings-page.md
 │  ├─ architecture/
 │  │  └─ repository-structure.md
 │  ├─ dev/
@@ -100,13 +104,28 @@ emoji-whisper/
 │  └─ CHANGELOG.md
 └─ src/
    ├─ entrypoints/                  # WXT entrypoints (bundled by WXT)
-   │  └─ content.ts
+   │  ├─ content.ts
+   │  ├─ options/                   # Options page entrypoint (React)
+   │  │  ├─ index.html
+   │  │  └─ main.tsx
+   │  └─ popup/                     # Popup entrypoint (React)
+   │     ├─ index.html
+   │     └─ main.tsx
    ├─ extension/                    # Infrastructure/UI (browser APIs, DOM)
    │  ├─ diagnostics/               # Diagnostics (logging, tracing)
    │  │  ├─ console-log-sink.ts
    │  │  └─ logger.ts
    │  ├─ adapters/                  # Prompt API, storage, availability, etc.
-   │  │  └─ prompt-api.ts
+   │  │  ├─ prompt-api.ts
+   │  │  └─ storage-adapter.ts      # PreferencesRepository via chrome.storage.local
+   │  ├─ settings-ui/               # React components (shared by popup & options)
+   │  │  ├─ OptionsApp.tsx
+   │  │  ├─ PopupApp.tsx
+   │  │  ├─ PresetSelector.tsx
+   │  │  ├─ SettingsForm.tsx
+   │  │  ├─ usePreferences.ts       # Hook: load/save preferences via StorageAdapter
+   │  │  ├─ options.css              # Options page styles
+   │  │  └─ popup.css                # Popup styles
    │  └─ content-script/            # DOM integration, overlay UI
    │     ├─ controller.ts
    │     ├─ dom-utils.ts
@@ -131,7 +150,9 @@ emoji-whisper/
    │  │  ├─ overlay/
    │  │  │  └─ mirror-content.ts
    │  │  ├─ preferences/
-   │  │  │  └─ user-preferences.ts
+   │  │  │  ├─ user-preferences.ts
+   │  │  │  ├─ preset-mode.ts       # PresetMode type + preset value mappings
+   │  │  │  └─ display-settings.ts  # DisplaySettings value object + defaults
    │  │  └─ suggestion/
    │  │     ├─ suggestion.ts
    │  │     ├─ suggestion-skip-policy.ts
