@@ -71,7 +71,7 @@ We also considered `@webext-core/messaging` (by the WXT author), which provides:
 - `defineExtensionMessaging` — type-safe wrapper around `chrome.runtime` messaging (background ↔ ISOLATED).
 - `defineWindowMessaging` — type-safe wrapper around `window.postMessage` with automatic namespace isolation (ISOLATED ↔ MAIN).
 
-**Current decision: use raw `window.postMessage`.** The settings bridge is a one-way push of a single data type (`UserPreferences`). The domain-layer `createUserPreferences()` validation already ensures type safety at the receiver. Adding a dependency for namespace isolation alone is unnecessary when a single `EMOJI_WHISPER_SETTINGS` type string suffices.
+**Current decision: use raw `window.postMessage`.** The settings bridge is a one-way push of a single data type (`UserPreferences`). The domain-layer `UserPreferences.fromJSON()` validation already ensures type safety at the receiver (see ADR 0014). Adding a dependency for namespace isolation alone is unnecessary when a single `EMOJI_WHISPER_SETTINGS` type string suffices.
 
 **Future consideration:** If popup ↔ background ↔ content script communication is needed (e.g., triggering suggestions from popup, badge updates), adopt `@webext-core/messaging` for `defineExtensionMessaging` and unify the Window Messaging side under `defineWindowMessaging` at the same time.
 
@@ -117,13 +117,13 @@ A single `WxtStorageItem` is defined once and imported by all consumers (Options
 ```typescript
 // src/extension/adapters/storage-items.ts
 import { storage } from "wxt/storage";
-import type { UserPreferences } from "../../core/domain/preferences/user-preferences";
-import { DEFAULT_USER_PREFERENCES } from "../../core/domain/preferences/user-preferences";
+import type { UserPreferencesInput } from "../../core/domain/preferences/user-preferences";
+import { UserPreferences } from "../../core/domain/preferences/user-preferences";
 
-export const prefsItem = storage.defineItem<UserPreferences>(
+export const prefsItem = storage.defineItem<UserPreferencesInput>(
   "local:userPreferences",
   {
-    fallback: DEFAULT_USER_PREFERENCES,
+    fallback: UserPreferences.createDefault().toJSON(),
     // Future: add `version` and `migrations` for schema evolution
   },
 );
@@ -153,13 +153,13 @@ The receiver (`SettingsReceiver`) applies three successive validation layers bef
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- | ------------------------ |
 | 1. Envelope  | `event.data?.type === 'EMOJI_WHISPER_SETTINGS'`                                                                                            | Short-circuit unrelated messages (page scripts, other extensions, browser internals)  | Ignore silently (no log) |
 | 2. Structure | `payload` is a non-null object with expected top-level keys (`context`, `skip`, `display`, `enabled`, `presetMode`, `topK`, `temperature`) | Reject structurally broken envelopes before entering domain validation                | Log warning, drop        |
-| 3. Domain    | `createUserPreferences(payload)` succeeds                                                                                                  | Validate ranges, types, and invariants (e.g., `0 < topK ≤ 10`, `0 ≤ temperature ≤ 2`) | Log error, drop          |
+| 3. Domain    | `UserPreferences.fromJSON(payload)` succeeds (see ADR 0014)                                                                                | Validate ranges, types, and invariants (e.g., `0 < topK ≤ 40`, `0 ≤ temperature ≤ 2`) | Log error, drop          |
 
 Design rationale:
 
 - **Layer 1** eliminates >99% of messages at near-zero cost — `window.postMessage` is noisy on real-world pages.
 - **Layer 2** distinguishes structural errors (missing fields, wrong shape) from domain errors (out-of-range values), enabling clear diagnostics.
-- **Layer 3** reuses the existing `createUserPreferences()` factory, ensuring the domain layer never receives unvalidated data. This is the single source of truth for what constitutes a valid `UserPreferences`.
+- **Layer 3** reuses the domain class `UserPreferences.fromJSON()` (ADR 0014), ensuring the domain layer never receives unvalidated data. This is the single source of truth for what constitutes a valid `UserPreferences`.
 
 ### Domain port
 
@@ -172,7 +172,7 @@ interface SettingsProvider {
 }
 ```
 
-- `getCurrent()` is synchronous; returns `DEFAULT_USER_PREFERENCES` until the first message arrives.
+- `getCurrent()` is synchronous; returns `UserPreferences.createDefault()` until the first message arrives.
 - `onChange()` returns an unsubscribe function.
 - The controller reads settings from this port, keeping domain logic decoupled from the messaging mechanism.
 
