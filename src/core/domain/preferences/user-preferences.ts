@@ -1,19 +1,30 @@
 import type { ContextExtractionSettings, SentenceContextSettings } from '../context/context-extraction';
 import { DEFAULT_SENTENCE_CONTEXT_SETTINGS } from '../context/context-extraction';
 import type { SkipConditions } from '../suggestion/suggestion-skip-policy';
+import type { DisplaySettings } from './display-settings';
+import { DEFAULT_DISPLAY_SETTINGS } from './display-settings';
+import type { PresetMode } from './preset-mode';
+import { isValidPresetMode } from './preset-mode';
 
 export type AcceptKey = 'Tab';
 
 export type UserPreferences = Readonly<{
   enabled: boolean;
   acceptKey: AcceptKey;
+  presetMode: PresetMode;
+  topK: number;
+  temperature: number;
   context: ContextExtractionSettings;
   skip: SkipConditions;
+  display: DisplaySettings;
 }>;
 
 export const DEFAULT_USER_PREFERENCES: UserPreferences = {
   enabled: true,
   acceptKey: 'Tab',
+  presetMode: 'balanced',
+  topK: 8,
+  temperature: 0.7,
   context: {
     contextMode: 'sentences',
     minContextLength: 5,
@@ -26,11 +37,14 @@ export const DEFAULT_USER_PREFERENCES: UserPreferences = {
     skipIfEmojiOnly: true,
     skipIfUrlOnly: false,
   },
+  display: DEFAULT_DISPLAY_SETTINGS,
 };
 
 export function createUserPreferences(input: UserPreferences): UserPreferences {
   validateContextSettings(input.context);
+  validateModelSettings(input);
   if (input.acceptKey !== 'Tab') throw new Error('Invalid acceptKey');
+  if (!isValidPresetMode(input.presetMode)) throw new Error('Invalid presetMode');
   return input;
 }
 
@@ -46,6 +60,12 @@ function validateContextSettings(context: ContextExtractionSettings): void {
   if (context.contextMode === 'sentences') {
     validateSentenceContextSettings(context.sentenceContext);
   }
+}
+
+function validateModelSettings(prefs: UserPreferences): void {
+  if (prefs.topK < 1 || prefs.topK > 40) throw new Error('topK must be between 1 and 40');
+  if (!Number.isInteger(prefs.topK)) throw new Error('topK must be an integer');
+  if (prefs.temperature < 0.0 || prefs.temperature > 2.0) throw new Error('temperature must be between 0.0 and 2.0');
 }
 
 function validateSentenceContextSettings(settings: SentenceContextSettings): void {
