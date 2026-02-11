@@ -85,12 +85,14 @@ emoji-whisper/
 │  │  ├─ 0009-chain-of-thought-reason.md
 │  │  ├─ 0010-inline-mirror-overlay.md
    │  ├─ 0011-cursor-position-prompt-tuning.md
-   │  └─ 0012-react-settings-page.md
+│  │  ├─ 0012-react-settings-page.md
+   │  └─ 0013-settings-bridge-architecture.md
 │  ├─ architecture/
 │  │  └─ repository-structure.md
 │  ├─ dev/
 │  │  ├─ ai-coding-guidelines.md
 │  │  ├─ definition-of-done.md
+│  │  ├─ settings-integration-plan.md
 │  │  ├─ workflow-tdd.md
 │  │  └─ wxt-development-guidelines.md
 │  ├─ proposals/
@@ -104,7 +106,9 @@ emoji-whisper/
 │  └─ CHANGELOG.md
 └─ src/
    ├─ entrypoints/                  # WXT entrypoints (bundled by WXT)
+   │  ├─ background.ts              # Background service worker (MV3)
    │  ├─ content.ts
+   │  ├─ settings-bridge.content.ts  # ISOLATED-world bridge: storage → MAIN
    │  ├─ options/                   # Options page entrypoint (React)
    │  │  ├─ index.html
    │  │  └─ main.tsx
@@ -117,7 +121,8 @@ emoji-whisper/
    │  │  └─ logger.ts
    │  ├─ adapters/                  # Prompt API, storage, availability, etc.
    │  │  ├─ prompt-api.ts
-   │  │  └─ storage-adapter.ts      # PreferencesRepository via chrome.storage.local
+   │  │  ├─ storage-adapter.ts      # PreferencesRepository via WXT storage API
+   │  │  └─ storage-items.ts        # Shared WxtStorageItem definitions (single source of truth)
    │  ├─ settings-ui/               # React components (shared by popup & options)
    │  │  ├─ OptionsApp.tsx
    │  │  ├─ PopupApp.tsx
@@ -131,6 +136,8 @@ emoji-whisper/
    │     ├─ dom-utils.ts
    │     ├─ input-snapshot.ts
    │     ├─ overlay.ts
+   │     ├─ settings-protocol.ts     # Shared message type/shape for settings bridge
+   │     ├─ settings-receiver.ts     # MAIN-world listener; implements SettingsProvider
    │     └─ README.md
    ├─ core/                         # Pure domain logic (no browser/DOM APIs)
    │  ├─ shared/                    # Cross-cutting, domain-agnostic utilities/types
@@ -170,7 +177,8 @@ emoji-whisper/
    │  │  ├─ suggestion-generator.ts
    │  │  ├─ clock.ts
    │  │  ├─ log-sink.ts
-   │  │  └─ preferences-repository.ts
+   │  │  ├─ preferences-repository.ts
+   │  │  └─ settings-provider.ts     # Port: dynamic settings for content script
    │  └─ events/                    # Domain events
    │     └─ suggestion-events.ts
    ├─ assets/                       # CSS/images processed by WXT

@@ -6,6 +6,10 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [Unreleased]
 
+- Updated ADR 0013: added 3-layer message validation protocol (envelope guard → structure guard → domain validation) for `window.postMessage` payloads received by `SettingsReceiver`.
+- Added ADR 0013: Settings Bridge Architecture — ISOLATED-world content script bridge + `window.postMessage` to deliver stored `UserPreferences` to the MAIN-world content script; adopts WXT Storage API (`storage.defineItem`) for type-safe, cross-browser storage with built-in `.watch()` and migration support. Includes background service worker for diagnostics and future lifecycle management.
+- Added `docs/dev/settings-integration-plan.md` documenting the full gap analysis (G1–G9), chosen bridge architecture, and step-by-step TDD implementation checklist for wiring the settings UI to the content script.
+- Updated repository structure: planned `src/entrypoints/background.ts`, `src/entrypoints/settings-bridge.content.ts`, `src/extension/content-script/settings-protocol.ts`, `src/extension/content-script/settings-receiver.ts`, `src/core/ports/settings-provider.ts`, `src/extension/adapters/storage-items.ts`.
 - Implemented React-based Settings page (Options page + Popup) per ADR 0012 / FR-8 / FR-11.
   - Added React 19, ReactDOM 19, `@wxt-dev/module-react` dependencies.
   - Created `PresetMode` value object (`simple`/`balanced`/`creative`/`custom`) with predefined AI-tuning, context, and skip values.
