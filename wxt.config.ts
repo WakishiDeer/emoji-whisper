@@ -2,7 +2,7 @@ import { defineConfig } from 'wxt';
 
 export default defineConfig({
   srcDir: 'src',
-  modules: ['@wxt-dev/auto-icons'],
+  modules: ['@wxt-dev/auto-icons', '@wxt-dev/module-react'],
   // @ts-expect-error -- type augmentation from @wxt-dev/auto-icons module
   autoIcons: {
     baseIconPath: 'assets/icon.svg',
@@ -15,7 +15,7 @@ export default defineConfig({
   manifest: {
     name: 'Emoji Whisper',
     description: 'Suggests a single emoji based on your input using on-device AI',
-    permissions: [],
+    permissions: ['storage'],
     web_accessible_resources: [
       {
         resources: ['content-scripts/*'],

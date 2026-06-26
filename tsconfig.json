@@ -5,6 +5,7 @@
     "moduleResolution": "Bundler",
     "lib": ["ES2022", "DOM"],
     "types": ["wxt/browser"],
+    "jsx": "react-jsx",
     "strict": true,
     "sourceMap": true,
     "skipLibCheck": true,

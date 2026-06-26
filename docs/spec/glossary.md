@@ -35,10 +35,17 @@ This document defines the ubiquitous language used throughout the Emoji Whisper 
 | SystemPromptTemplate | The fixed system-level prompt used to constrain AI output in MVP. |
 | PromptOptions | Model options such as `maxTokens`, `temperature`, and `topK` used for the Prompt API call. |
 | topK | A model sampling parameter that controls how many top-probability tokens are considered at each generation step. Lower values (e.g. 3) restrict output diversity; higher values (e.g. 8–40) allow the model to select from a wider pool of candidates. Default: 8. |
+| temperature | A model sampling parameter controlling randomness of AI output. Lower values (e.g. 0.3) produce more deterministic suggestions; higher values (e.g. 1.0–2.0) increase creativity and variety. Must be between 0.0 and 2.0. Default: 0.7. |
+| Options Page | A full-page React UI for configuring all extension settings. Opened via `chrome.runtime.openOptionsPage()` or the browser's extension management page. Contains the preset mode selector, all individual setting controls, and a reset-to-defaults button. See ADR 0012. |
+| Popup | A compact React UI shown when the user clicks the extension's browser action icon. Provides quick controls: enable/disable toggle, preset mode selector, and a link to the full Options page. See ADR 0012. |
+| PresetMode | A named configuration profile (`'simple'`, `'balanced'`, `'creative'`, or `'custom'`) that batch-applies a set of user preferences. Selecting a preset fills all individual settings with predefined values. Manually changing any setting while a named preset is active transitions the mode to `'custom'`. The selected mode is persisted alongside other preferences. See ADR 0012. |
 | ContextMode | The extraction strategy: `'characters'` (legacy character-count based) or `'sentences'` (sentence-count based, see ADR 0007). |
 | beforeSentenceCount | Number of complete sentences to extract **before** the cursor when using sentence mode. Default: 2. |
 | afterSentenceCount | Number of complete sentences to extract **after** the cursor when using sentence mode. Default: 1. |
 | cursorMarker | A marker string (default: `[CURSOR]`) inserted at the cursor position in the extracted context when using sentence mode. Tells the AI exactly where the emoji will be inserted. |
+| DisplaySettings | A value object grouping UI presentation preferences (`showUnavailableToast`, `showReasonTooltip`). Follows the same `Readonly<{...}>` pattern as `SkipConditions`. Independent of preset modes. See ADR 0012. |
+| showUnavailableToast | When true (default), displays a toast notification when the Prompt API is unavailable or the AI model is downloading. When false, the toast is suppressed. Part of `DisplaySettings`. |
+| showReasonTooltip | When true (default), displays a tooltip with the model's reasoning when hovering over the ghost emoji overlay. When false, the tooltip is suppressed. Part of `DisplaySettings`. |
 
 ## State and Lifecycle Terms
 
