@@ -1,5 +1,5 @@
 import { DEFAULT_PROMPT_CONFIG } from '../../core/services/prompt';
-import { DEFAULT_USER_PREFERENCES } from '../../core/domain/preferences/user-preferences';
+import { UserPreferences } from '../../core/domain/preferences/user-preferences';
 import type { SuggestionInputSnapshot } from '../../core/services/emoji-suggestion-orchestrator';
 import { SuggestionSession } from '../../core/domain/suggestion/suggestion-session';
 import { isEnterKey, isEscapeKey, isPlainTabKey, isTabKey } from '../../core/domain/keyboard/key-utils';
@@ -15,8 +15,9 @@ import { findSupportedInputFromEvent, insertAtCaret, type SupportedEl } from './
 import { readSuggestionSnapshotFromActiveEl } from './input-snapshot';
 import { GhostOverlay, ToastMessage } from './overlay';
 
-const DEFAULT_SETTINGS = DEFAULT_USER_PREFERENCES.context;
-const DEFAULT_SKIP = DEFAULT_USER_PREFERENCES.skip;
+const _defaults = UserPreferences.createDefault();
+const DEFAULT_SETTINGS = _defaults.context;
+const DEFAULT_SKIP = _defaults.skip;
 
 const IDLE_DELAY_MS = 700;
 const COOLDOWN_MS = 2000;

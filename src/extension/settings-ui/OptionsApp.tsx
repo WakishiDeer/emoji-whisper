@@ -10,49 +10,57 @@
  * - Reset to defaults
  */
 
-import React, { useCallback } from 'react';
-import type { UserPreferences } from '../../core/domain/preferences/user-preferences';
-import { DEFAULT_USER_PREFERENCES, createUserPreferences } from '../../core/domain/preferences/user-preferences';
-import type { PresetMode } from '../../core/domain/preferences/preset-mode';
-import { getPresetValues } from '../../core/domain/preferences/preset-mode';
-import { usePreferences } from './usePreferences';
-import { PresetSelector } from './PresetSelector';
-import { SettingsForm } from './SettingsForm';
-import './options.css';
+import React, { useCallback, useState } from "react";
+import type { UserPreferences } from "../../core/domain/preferences/user-preferences";
+import { UserPreferences as UserPreferencesClass } from "../../core/domain/preferences/user-preferences";
+import type { PresetMode } from "../../core/domain/preferences/preset-mode";
+import { usePreferences } from "./usePreferences";
+import { PresetSelector } from "./PresetSelector";
+import { SettingsForm } from "./SettingsForm";
+import type { FieldErrorKey } from "./SettingsForm";
+import "./options.css";
 
 export function OptionsApp() {
   const { prefs, loading, saving, error, update } = usePreferences();
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<FieldErrorKey, string>>
+  >({});
 
   const handlePresetChange = useCallback(
     (mode: PresetMode) => {
-      const presetValues = getPresetValues(mode);
-      if (presetValues) {
-        // Apply preset values, keep display settings unchanged
-        void update({ ...prefs, ...presetValues, presetMode: mode });
-      } else {
-        // 'custom' — just update the mode label
-        void update({ ...prefs, presetMode: mode });
-      }
+      setFieldErrors({});
+      void update(prefs.applyPreset(mode));
     },
     [prefs, update],
   );
 
   const handleSettingsChange = useCallback(
     (next: UserPreferences) => {
-      try {
-        createUserPreferences(next);
-        void update(next);
-      } catch {
-        // Validation failed — don't save, keep local state for the form
-        // The SettingsForm shows inline errors
-      }
+      // SettingsForm already validates via with*() methods
+      void update(next);
     },
     [update],
   );
 
+  const handleValidationError = useCallback(
+    (field: FieldErrorKey, message: string | null) => {
+      setFieldErrors((prev) => {
+        if (message === null) {
+          if (!(field in prev)) return prev;
+          const next = { ...prev };
+          delete next[field];
+          return next;
+        }
+        return { ...prev, [field]: message };
+      });
+    },
+    [],
+  );
+
   const handleReset = useCallback(() => {
-    if (window.confirm('Reset all settings to defaults?')) {
-      void update(DEFAULT_USER_PREFERENCES);
+    if (window.confirm("Reset all settings to defaults?")) {
+      setFieldErrors({});
+      void update(UserPreferencesClass.createDefault());
     }
   }, [update]);
 
@@ -64,7 +72,11 @@ export function OptionsApp() {
     <div className="options-app">
       <header className="options-header">
         <h1>Emoji Whisper Settings</h1>
-        {error && <p className="options-error" role="alert">{error}</p>}
+        {error && (
+          <p className="options-error" role="alert">
+            {error}
+          </p>
+        )}
         {saving && <p className="options-saving">Saving…</p>}
       </header>
 
@@ -82,6 +94,8 @@ export function OptionsApp() {
             prefs={prefs}
             onChange={handleSettingsChange}
             disabled={saving}
+            fieldErrors={fieldErrors}
+            onValidationError={handleValidationError}
           />
         </section>
 

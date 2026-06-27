@@ -6,6 +6,15 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [Unreleased]
 
+- Added inline validation error handling for Settings UI (AC-19): `SettingsForm` now surfaces domain validation errors inline next to each invalid field via `onValidationError` callback. `OptionsApp` manages `fieldErrors` state and clears errors on next valid change, preset switch, or reset-to-defaults. Added `aria-invalid`, `aria-describedby`, and `role="alert"` attributes for accessibility. Added `.field-error` CSS styling.
+- Fixed invalid ARIA usage in Settings UI: `aria-invalid` is now only present when a field is invalid, with a valid token value, to satisfy axe/Edge Tools checks.
+- Implemented ADR 0014 (S4): converted `UserPreferences` from `Readonly<{}>` type alias to a class with `private constructor`, `static create()`, `static createDefault()`, `static fromJSON()`, `toJSON()`, and 9 immutable `with*()` update methods. All consumers migrated: `StorageAdapter` uses `fromJSON()`/`toJSON()`, React settings UI (OptionsApp, PopupApp, SettingsForm) uses `with*()`/`applyPreset()`, controller uses `UserPreferences.createDefault()`. Deprecated backward-compatible exports retained. Added 30 new class API tests (223 total passing).
+- Accepted ADR 0014: Domain Type Construction Validation — adopted S4 (targeted class refactoring for `UserPreferences` only). `UserPreferences` will become a class with `private constructor`, `static create()`, immutable `with*()` update methods, and `toJSON()`/`fromJSON()` serialization. Nested types remain plain `Readonly<{}>`, validated at the aggregate boundary. S3 (full class refactoring) deferred to follow-up PRs based on implementation experience.
+
+- Updated ADR 0013: added 3-layer message validation protocol (envelope guard → structure guard → domain validation) for `window.postMessage` payloads received by `SettingsReceiver`.
+- Added ADR 0013: Settings Bridge Architecture — ISOLATED-world content script bridge + `window.postMessage` to deliver stored `UserPreferences` to the MAIN-world content script; adopts WXT Storage API (`storage.defineItem`) for type-safe, cross-browser storage with built-in `.watch()` and migration support. Includes background service worker for diagnostics and future lifecycle management.
+- Added `docs/dev/settings-integration-plan.md` documenting the full gap analysis (G1–G9), chosen bridge architecture, and step-by-step TDD implementation checklist for wiring the settings UI to the content script.
+- Updated repository structure: planned `src/entrypoints/background.ts`, `src/entrypoints/settings-bridge.content.ts`, `src/extension/content-script/settings-protocol.ts`, `src/extension/content-script/settings-receiver.ts`, `src/core/ports/settings-provider.ts`, `src/extension/adapters/storage-items.ts`.
 - Implemented React-based Settings page (Options page + Popup) per ADR 0012 / FR-8 / FR-11.
   - Added React 19, ReactDOM 19, `@wxt-dev/module-react` dependencies.
   - Created `PresetMode` value object (`simple`/`balanced`/`creative`/`custom`) with predefined AI-tuning, context, and skip values.
